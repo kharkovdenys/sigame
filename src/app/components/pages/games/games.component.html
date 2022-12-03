@@ -1,0 +1,11 @@
+<div class="center">
+    <mat-card *ngFor="let game of games" class="card">
+        <mat-card-header>
+            <mat-card-title>
+                {{ game.name }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>Players: {{ game.players + '/' + game.maxPlayers }}</mat-card-content>
+        <mat-card-content>Rounds: {{ game.rounds }}</mat-card-content>
+    </mat-card>
+</div>
