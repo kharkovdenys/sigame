@@ -1,6 +1,7 @@
 import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
@@ -12,7 +13,9 @@ export class NewgameComponent implements OnInit {
   fileControl: FormControl;
   file: any;
   maxSize: number = 100;
+
   constructor(
+    private router: Router,
     private socketService: SocketService
   ) {
     this.fileControl = new FormControl(this.file, [
@@ -32,8 +35,8 @@ export class NewgameComponent implements OnInit {
   }
 
   create() {
-    if (this.file && this.fileControl.valid) {
-      this.socketService.create(this.name, this.maxPlayers);
+    if (this.file && this.fileControl.valid && this.name !== '') {
+      this.socketService.create(this.name, this.maxPlayers, this.router);
     }
   }
 }

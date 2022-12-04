@@ -1,0 +1,11 @@
+<div *ngFor="let item of [].constructor(maxPlayers);let i = index" [style.width.%]="100/(maxPlayers+2)" class="center">
+    <mat-card class="card" class="center">
+        <mat-card-title>
+            {{players.length>i?players[i].name:'⠀'}}
+        </mat-card-title>
+        <img mat-card-image
+            src="https://avatars.dicebear.com/api/{{players.length>i?'avataaars':'bottts'}}/{{players.length>i?players[i].name:'sigame'}}.svg"
+            [style.width]="'calc(100% - 20px)'">
+        {{players.length>i?players[i].state:'⠀'}}
+    </mat-card>
+</div>

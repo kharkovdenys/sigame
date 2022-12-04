@@ -1,0 +1,40 @@
+#top-part {
+    height: 65%;
+}
+
+#bottom-part {
+    height: 35%;
+    display: flex;
+}
+
+#game-part {
+    height: calc(100% - 60px);
+    background-color: #2688eb;
+}
+
+#showman-part {
+    width: 25%;
+    height: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.showman-card {
+    width: 75%;
+    min-height: 80%;
+}
+
+#actions {
+    width: 25%;
+    height: 100%;
+    justify-content: space-evenly;
+}
+
+app-players {
+    width: 75%;
+    height: 100%;
+    justify-content: space-evenly;
+    display: flex;
+}
