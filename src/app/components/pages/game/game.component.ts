@@ -21,6 +21,7 @@ export class GameComponent implements OnDestroy {
   showmanSub?: Subscription;
   maxPlayersSub?: Subscription;
   gameStateSub?: Subscription;
+  typeof: any;
 
   constructor(
     private router: Router,

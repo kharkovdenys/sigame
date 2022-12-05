@@ -10,4 +10,9 @@ export class PlayersComponent {
   @Input() players!: Player[];
   @Input() maxPlayers!: number;
   @Input() gameState!: string;
+
+  typeOf(value: any) {
+    return typeof value;
+  }
+
 }

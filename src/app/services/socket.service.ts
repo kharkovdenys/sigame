@@ -57,6 +57,7 @@ export class SocketService {
 
     this.socket.on("start", (data: any) => {
       this.gameStateSubject.next(data.gameState);
+      this.maxPlayersSubject.next(data.maxPlayers);
       console.log(data);
     });
   }

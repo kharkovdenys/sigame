@@ -1,7 +1,7 @@
 <div id="game-part">
     <div id="top-part">
         <div id="showman-part" class="center">
-            <mat-card class="showman-card">
+            <mat-card class="showman-card" [style.background-color]="showman.id === ''? '#CDCDCD':'#fff'">
                 <div class="center">
                     <mat-card-header>
                         <mat-card-title class="text-center">{{showman.name}}</mat-card-title>
