@@ -4,15 +4,23 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import Game from '../interfaces/Game';
 import Player from '../interfaces/Player';
+import Showman from '../interfaces/Showman';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
   private playersSubject: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  private showmanSubject: BehaviorSubject<Showman> = new BehaviorSubject<Showman>({ id: '', name: '⠀' });
+  private maxPlayersSubject: BehaviorSubject<number> = new BehaviorSubject<number>(5);
+  private gameStateSubject: BehaviorSubject<string> = new BehaviorSubject<string>('waiting-ready');
   public players = this.playersSubject.asObservable();
+  public showman = this.showmanSubject.asObservable();
+  public maxPlayers = this.maxPlayersSubject.asObservable();
+  public gameState = this.gameStateSubject.asObservable();
+  public gameId = '';
 
-  constructor(private socket: Socket) {
+  constructor(private socket: Socket, private router: Router) {
 
     this.socket.on("player-joined", (player: Player) => {
       console.log("player joined", player);
@@ -21,11 +29,19 @@ export class SocketService {
       this.playersSubject.next(players);
     });
 
-    this.socket.on("player-leave", (playerId: string) => {
-      console.log("got playerLeft");
+    this.socket.on('showman-joined', (showman: Showman) => {
+      console.log("showman joined", showman);
+      this.showmanSubject.next(showman);
+    })
+
+    this.socket.on("leave-game", (id: string) => {
+      console.log("leave-game");
       let players = this.playersSubject.getValue();
-      players = players.filter((player) => player.id !== playerId);
+      players = players.filter((player) => player.id !== id);
       this.playersSubject.next(players);
+      if (this.showmanSubject.getValue().id === id) {
+        this.showmanSubject.next({ id: '', name: '⠀' });
+      }
     });
 
     this.socket.on("player-change-ready", (playerId: string) => {
@@ -40,6 +56,7 @@ export class SocketService {
     });
 
     this.socket.on("start", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
       console.log(data);
     });
   }
@@ -58,29 +75,31 @@ export class SocketService {
     return this.socket.ioSocket.id;
   }
 
-  changeReady(gameid: string) {
-    this.socket.emit("change-ready", { gameId: gameid }, (status: any) => {
+  changeReady() {
+    this.socket.emit("change-ready", { gameId: this.gameId }, (status: any) => {
       console.log(status);
     });
   }
 
-  start(gameid: string) {
-    this.socket.emit("start", { gameId: gameid }, (status: any) => {
+  start() {
+    this.socket.emit("start", { gameId: this.gameId }, (status: any) => {
       console.log(status);
     });
   }
 
-  leave(gameid: string) {
-    this.socket.emit("leave-room", gameid);
+  leave() {
+    this.socket.emit("leave-room", this.gameId);
   }
 
-  join(gameid: string, router: Router) {
-    this.socket.emit("join-game", { gameId: gameid, name: 'test' }, (data: any) => {
+  join(gameId: string, type: 'player' | 'showman') {
+    this.socket.emit("join-game", { gameId, name: 'test', type }, (data: any) => {
       if (data.status === 'success') {
         this.playersSubject.next(data.players);
-        router.navigate(['/game'], {
-          state: { gameId: data.gameId, showman: data.showman, maxPlayers: data.maxPlayers }, replaceUrl: true
-        });
+        this.showmanSubject.next(data.showman);
+        this.maxPlayersSubject.next(data.maxPlayers);
+        this.gameStateSubject.next(data.gameState);
+        this.gameId = data.gameId;
+        this.router.navigate(['/game']);
       }
       else {
         console.log(data);
@@ -88,13 +107,15 @@ export class SocketService {
     });
   }
 
-  create(name: string, maxPlayers: number, router: Router) {
+  create(name: string, maxPlayers: number) {
     this.socket.emit("create-game", { name, maxPlayers, showmanName: localStorage.getItem('name') }, (data: any) => {
       if (data.status === 'success') {
-        router.navigate(['/game'], {
-          state: { gameId: data.gameId, showman: data.showman, maxPlayers: data.maxPlayers }, replaceUrl: true
-        });
         this.playersSubject.next([]);
+        this.showmanSubject.next(data.showman);
+        this.maxPlayersSubject.next(data.maxPlayers);
+        this.gameStateSubject.next(data.gameState);
+        this.gameId = data.gameId;
+        this.router.navigate(['/game']);
       }
       else {
         console.log(data);

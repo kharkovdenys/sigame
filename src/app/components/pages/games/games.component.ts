@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import Game from 'src/app/interfaces/Game';
 import { SocketService } from 'src/app/services/socket.service';
 
@@ -10,14 +9,14 @@ import { SocketService } from 'src/app/services/socket.service';
 })
 export class GamesComponent implements OnInit {
   constructor(
-    private socketService: SocketService, private router: Router
-  ) { }
+    private socketService: SocketService) { }
   games: Game[] = [];
 
   ngOnInit(): void {
     this.socketService.getGames(this.games);
   }
-  join(gameid: string) {
-    this.socketService.join(gameid, this.router);
+  join(gameId: string) {
+    this.socketService.join(gameId, 'showman');
+    this.socketService.join(gameId, 'player');
   }
 }
