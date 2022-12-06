@@ -20,6 +20,7 @@ import config from './services/socket.config';
 import { GameComponent } from './components/pages/game/game.component';
 import { DialogName } from './components/pages/home/dialog/dialog-name.component';
 import { PlayersComponent } from './components/pages/game/players/players.component';
+import { DialogJoin } from './components/pages/games/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { PlayersComponent } from './components/pages/game/players/players.compon
     HomeComponent,
     GameComponent,
     DialogName,
-    PlayersComponent
+    PlayersComponent,
+    DialogJoin
   ],
   imports: [
     BrowserModule,

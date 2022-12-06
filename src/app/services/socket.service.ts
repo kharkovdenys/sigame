@@ -93,7 +93,7 @@ export class SocketService {
   }
 
   join(gameId: string, type: 'player' | 'showman') {
-    this.socket.emit("join-game", { gameId, name: 'test', type }, (data: any) => {
+    this.socket.emit("join-game", { gameId, name: localStorage.getItem('name'), type }, (data: any) => {
       if (data.status === 'success') {
         this.playersSubject.next(data.players);
         this.showmanSubject.next(data.showman);

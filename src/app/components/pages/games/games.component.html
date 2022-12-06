@@ -1,5 +1,5 @@
 <div class="center">
-    <mat-card *ngFor="let game of games" class="card" (click)="join(game.id)">
+    <mat-card *ngFor="let game of games" class="card" (click)="openDialog(game.id)">
         <mat-card-header>
             <mat-card-title>
                 {{ game.name }}
