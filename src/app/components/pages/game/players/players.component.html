@@ -1,13 +1,20 @@
 <div *ngFor="let item of [].constructor(maxPlayers);let i = index" [style.width.%]="100/(maxPlayers+2)" class="center">
-    <mat-card class="card" class="center"
+    <mat-card id="card" class="center" (click)="players.length>i?choosePlayer(players[i].name):undefined"
         [style.background-color]="players.length<=i || typeOf(players[i].id) === 'undefined'? '#CDCDCD':'#fff'">
         <mat-card-title>
             {{players.length>i?players[i].name:'⠀'}}
         </mat-card-title>
-        <img mat-card-image
-            src="https://avatars.dicebear.com/api/{{players.length>i?'avataaars':'bottts'}}/{{players.length>i?players[i].name:'sigame'}}.svg"
-            [style.width]="'calc(100% - 20px)'">
+        <div id="card-img">
+            <img mat-card-image
+                src="https://avatars.dicebear.com/api/{{players.length>i?'avataaars':'bottts'}}/{{players.length>i?players[i].name:'sigame'}}.svg"
+                style="max-width: 100%;
+                        max-height: 100%;
+                        display: block;">
+        </div>
         {{players.length>i?gameState!=='waiting-ready'?players[i].score:
         players[i].state==='not-ready'?'Not ready':'Ready':'⠀'}}
+        <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
+            *ngIf="gameState==='choose-questions'&&chooser===players[i].name">
+        </mat-progress-bar>
     </mat-card>
 </div>

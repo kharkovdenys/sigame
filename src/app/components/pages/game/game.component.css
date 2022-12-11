@@ -1,5 +1,6 @@
 #top-part {
     height: 65%;
+    display: flex;
 }
 
 #bottom-part {
@@ -23,7 +24,15 @@
 
 .showman-card {
     width: 75%;
-    min-height: 80%;
+    min-height: 50%;
+    justify-content: center;
+}
+
+#showman-image {
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 #actions {
@@ -37,4 +46,9 @@ app-players {
     height: 100%;
     justify-content: space-evenly;
     display: flex;
+}
+
+app-screen {
+    height: 100%;
+    width: 75%;
 }

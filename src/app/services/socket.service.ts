@@ -4,7 +4,10 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import Game from '../interfaces/Game';
 import Player from '../interfaces/Player';
+import Position from '../interfaces/Position';
+import Question from '../interfaces/Question';
 import Showman from '../interfaces/Showman';
+import Theme from '../interfaces/Theme';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +17,20 @@ export class SocketService {
   private showmanSubject: BehaviorSubject<Showman> = new BehaviorSubject<Showman>({ id: '', name: '⠀' });
   private maxPlayersSubject: BehaviorSubject<number> = new BehaviorSubject<number>(5);
   private gameStateSubject: BehaviorSubject<string> = new BehaviorSubject<string>('waiting-ready');
+  private themesSubject: BehaviorSubject<Theme[]> = new BehaviorSubject<Theme[]>([]);
+  private roundNameSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private chooserSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private questionsSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
+  private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: 0, j: 0 });
   public players = this.playersSubject.asObservable();
   public showman = this.showmanSubject.asObservable();
   public maxPlayers = this.maxPlayersSubject.asObservable();
   public gameState = this.gameStateSubject.asObservable();
+  public themes = this.themesSubject.asObservable();
+  public roundName = this.roundNameSubject.asObservable();
+  public chooser = this.chooserSubject.asObservable();
+  public questions = this.questionsSubject.asObservable();
+  public position = this.positionSubject.asObservable();
   public gameId = '';
 
   constructor(private socket: Socket, private router: Router) {
@@ -58,12 +71,58 @@ export class SocketService {
     this.socket.on("start", (data: any) => {
       this.gameStateSubject.next(data.gameState);
       this.maxPlayersSubject.next(data.maxPlayers);
+      this.themesSubject.next(data.themes);
+      console.log(data);
+    });
+
+    this.socket.on("show-round-themes", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.themesSubject.next(data.themes);
+      this.roundNameSubject.next(data.roundName);
+      console.log(data);
+    });
+
+    this.socket.on("choose-questions", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.chooserSubject.next(data.chooser);
+      console.log(data);
+    });
+
+    this.socket.on("choose-player-start", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.questionsSubject.next(data.questions);
+      console.log(data);
+    });
+
+    this.socket.on("questions", (data: any) => {
+      this.questionsSubject.next(data.questions);
+      console.log(data);
+    });
+
+    this.socket.on('question-i-j', (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.positionSubject.next({ i: data.i, j: data.j });
+      setTimeout(() => {
+        let newQuestions = this.questionsSubject.getValue();
+        newQuestions[data.j].prices[data.i] = '';
+        this.questionsSubject.next(newQuestions);
+      }, 1000);
       console.log(data);
     });
   }
 
   getGames(games: Game[]) {
-    this.socket.emit("get-game-list", (gameList: Game[]) => games.push(...gameList))
+    this.socket.emit("get-game-list", (gameList: Game[]) => games.push(...gameList));
+  }
+
+  choosePlayer(playerName: string) {
+    if (this.showmanSubject.getValue().id === this.socket.ioSocket.id) {
+      this.socket.emit("choose-player", { playerName, gameId: this.gameId });
+    }
+  }
+
+  sendChooseQuestion(i: number, j: number) {
+    this.socket.emit("choose-question", { i, j, gameId: this.gameId });
   }
 
   upload(file: File) {

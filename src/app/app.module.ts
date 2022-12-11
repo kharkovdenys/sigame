@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +23,8 @@ import { GameComponent } from './components/pages/game/game.component';
 import { DialogName } from './components/pages/home/dialog/dialog-name.component';
 import { PlayersComponent } from './components/pages/game/players/players.component';
 import { DialogJoin } from './components/pages/games/dialog/dialog.component';
+import { ScreenComponent } from './components/pages/game/screen/screen.component';
+import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
   declarations: [
@@ -31,19 +35,23 @@ import { DialogJoin } from './components/pages/games/dialog/dialog.component';
     GameComponent,
     DialogName,
     PlayersComponent,
-    DialogJoin
+    DialogJoin,
+    ScreenComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    CdkTableModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatSliderModule,
     MatInputModule,
     MatCardModule,
+    MatTableModule,
     MatFormFieldModule,
     MatDialogModule,
+    MatProgressBarModule,
     NgxMatFileInputModule,
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule

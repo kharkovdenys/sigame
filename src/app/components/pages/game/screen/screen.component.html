@@ -1,0 +1,25 @@
+<div id="screen" [ngSwitch]="gameState">
+    <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
+    <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
+        {{getThemes()}}
+    </div>
+    <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
+        <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
+    </div>
+    <div id="table"
+        *ngSwitchCase="gameState === 'choose-questions' || gameState === 'choose-player-start' || gameState ==='question-i-j' ? gameState : ''">
+        <table mat-table [dataSource]="questions">
+            <ng-container cdkColumnDef="name">
+                <td cdk-cell *cdkCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+            <ng-container *ngFor="let item of [].constructor(maxColumns());let i = index" cdkColumnDef="{{i}}">
+                <td cdk-cell *cdkCellDef="let element; let j = index;"
+                    [@choose]="gameState==='question-i-j'&&j===position.j&&i===position.i?true:false"
+                    (click)="element.prices[i]&&chooser===playerName?sendChooseQuestion(i,j):undefined">
+                    {{element.prices[i]?element.prices[i]:'⠀⠀⠀⠀⠀'}}
+                </td>
+            </ng-container>
+            <tr cdk-row *cdkRowDef="let row; columns: columns(maxColumns());"></tr>
+        </table>
+    </div>
+</div>

@@ -10,10 +10,19 @@
                 </div>
                 <div id="showman-image">
                     <img mat-card-image src="https://avatars.dicebear.com/api/avataaars/{{showman.name}}.svg"
-                        alt="Showman" height="calc(65vh - 145px)">
+                        alt="Showman" style="
+                        max-width: 100%;
+                        max-height: 100%;
+                        display: block;
+                    ">
                 </div>
+                <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
+                    *ngIf="gameState==='choose-player-start'">
+                </mat-progress-bar>
             </mat-card>
         </div>
+        <app-screen [gameState]="gameState" [themes]="themes" [roundName]="roundName" [questions]="questions"
+            [chooser]="chooser" [playerName]="getPlayerName()" [position]="position" class="center"></app-screen>
     </div>
     <div id="bottom-part">
         <div id="actions" class="center">
@@ -23,7 +32,8 @@
                 ready</button>
             <button mat-button (click)="leave()">Leave the game</button>
         </div>
-        <app-players [players]="players" [maxPlayers]="maxPlayers" [gameState]="gameState">
+        <app-players [players]="players" [maxPlayers]="maxPlayers" [gameState]="gameState" [seconds]="seconds"
+            [secondsMax]="secondsMax" [chooser]="chooser">
         </app-players>
     </div>
 </div>
