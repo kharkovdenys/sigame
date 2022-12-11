@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Change player score {{data.playerName}}</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Score</mat-label>
+        <input matInput [(ngModel)]="data.score" required="true" type="number">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <button mat-button [mat-dialog-close]="{playerName: data.playerName,score:data.score}"
+        [disabled]="!isInteger(data.score)">Save</button>
+</div>

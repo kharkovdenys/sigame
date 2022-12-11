@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import Player from 'src/app/interfaces/Player';
 import { SocketService } from 'src/app/services/socket.service';
+import { DialogScore } from './dialog/dialog.component';
 
 @Component({
   selector: 'app-players',
@@ -8,8 +10,7 @@ import { SocketService } from 'src/app/services/socket.service';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent {
-
-  constructor(
+  constructor(public dialog: MatDialog,
     private socketService: SocketService
   ) { }
 
@@ -19,13 +20,14 @@ export class PlayersComponent {
   @Input() seconds!: number;
   @Input() secondsMax!: number;
   @Input() chooser!: string;
+  @Input() role!: 'showman' | 'player';
 
   typeOf(value: any) {
     return typeof value;
   }
 
   choosePlayer(playerName: string) {
-    if (this.gameState === 'choose-player-start') {
+    if (this.gameState === 'choose-player-start' && this.role === 'showman') {
       let min = this.players[0].score;
       for (let i = 1; i < this.players.length; i++) {
         if (min > this.players[i].score) {
@@ -39,6 +41,19 @@ export class PlayersComponent {
         }
       }
     }
+  }
+
+  changeScore(playerName: string, score: number) {
+    const dialogRef = this.dialog.open(DialogScore, {
+      data: { playerName, score },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (result !== undefined && Number.isInteger(result.score)) {
+        this.socketService.changeScore(result.playerName, result.score);
+      }
+    });
   }
 
 }

@@ -22,7 +22,7 @@ export class HomeComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
-      if (typeof result !== 'undefined' && result !== '') {
+      if (result !== undefined && result !== '') {
         localStorage.setItem('name', result);
         this.name = result;
         this.router.navigate(['/newgame']);

@@ -29,7 +29,7 @@ export class GamesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
-      if (typeof result.name !== 'undefined' && result.name !== '') {
+      if (result !== undefined && result.name !== '') {
         localStorage.setItem('name', result.name);
         this.name = result.name;
         this.socketService.join(gameId, result.type);

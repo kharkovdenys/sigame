@@ -68,6 +68,16 @@ export class SocketService {
       this.playersSubject.next(players);
     });
 
+    this.socket.on("player-change-score", (data: any) => {
+      const players = this.playersSubject.getValue();
+      players.forEach((player) => {
+        if (player.name === data.playerName) {
+          player.score = data.score;
+        }
+      });
+      this.playersSubject.next(players);
+    });
+
     this.socket.on("start", (data: any) => {
       this.gameStateSubject.next(data.gameState);
       this.maxPlayersSubject.next(data.maxPlayers);
@@ -137,6 +147,12 @@ export class SocketService {
 
   changeReady() {
     this.socket.emit("change-ready", { gameId: this.gameId }, (status: any) => {
+      console.log(status);
+    });
+  }
+
+  changeScore(playerName: string, score: number) {
+    this.socket.emit("change-score", { gameId: this.gameId, playerName, score }, (status: any) => {
       console.log(status);
     });
   }

@@ -11,8 +11,10 @@
                         max-height: 100%;
                         display: block;">
         </div>
-        {{players.length>i?gameState!=='waiting-ready'?players[i].score:
-        players[i].state==='not-ready'?'Not ready':'Ready':'⠀'}}
+        <div id="score"
+            (click)="players.length>i&&role==='showman'&&gameState!=='waiting-ready'?changeScore(players[i].name,players[i].score):undefined">
+            {{players.length>i?gameState!=='waiting-ready'?players[i].score:
+            players[i].state==='not-ready'?'Not ready':'Ready':'⠀'}}</div>
         <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
             *ngIf="gameState==='choose-questions'&&chooser===players[i].name">
         </mat-progress-bar>
