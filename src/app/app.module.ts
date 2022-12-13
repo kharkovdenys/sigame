@@ -26,6 +26,7 @@ import { DialogJoin } from './components/pages/games/dialog/dialog.component';
 import { ScreenComponent } from './components/pages/game/screen/screen.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { DialogScore } from './components/pages/game/players/dialog/dialog.component';
+import { DialogRates } from './components/pages/game/ratesdialog/ratesdialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { DialogScore } from './components/pages/game/players/dialog/dialog.compo
     PlayersComponent,
     DialogJoin,
     ScreenComponent,
-    DialogScore
+    DialogScore,
+    DialogRates
   ],
   imports: [
     BrowserModule,

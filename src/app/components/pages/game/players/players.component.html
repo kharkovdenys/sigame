@@ -1,6 +1,6 @@
 <div *ngFor="let item of [].constructor(maxPlayers);let i = index" [style.width.%]="100/(maxPlayers+2)" class="center">
     <mat-card id="card" class="center" (click)="players.length>i?choosePlayer(players[i].name):undefined"
-        [style.background-color]="players.length<=i || typeOf(players[i].id) === 'undefined'? '#CDCDCD':'#fff'">
+        [style.background-color]="players.length<=i || players[i].id === undefined || players[i].state==='Not a finalist' ? '#CDCDCD':'#fff'">
         <mat-card-title>
             {{players.length>i?players[i].name:'⠀'}}
         </mat-card-title>
@@ -12,11 +12,11 @@
                         display: block;">
         </div>
         <div id="score"
-            (click)="players.length>i&&role==='showman'&&gameState!=='waiting-ready'?changeScore(players[i].name,players[i].score):undefined">
+            (click)="players.length>i&&role==='showman'&&gameState!=='waiting-ready'&&players[i].state!=='Not a finalist'?changeScore(players[i].name,players[i].score):undefined">
             {{players.length>i?gameState!=='waiting-ready'?players[i].score:
-            players[i].state==='not-ready'?'Not ready':'Ready':'⠀'}}</div>
+            players[i].state:'⠀'}}</div>
         <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
-            *ngIf="gameState==='choose-questions'&&chooser===players[i].name">
+            *ngIf="(gameState==='choose-questions'||gameState==='choose-theme')&&chooser===players[i].name">
         </mat-progress-bar>
     </mat-card>
 </div>

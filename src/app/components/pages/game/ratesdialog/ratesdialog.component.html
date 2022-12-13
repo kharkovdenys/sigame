@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Enter your rate</h1>
+<div mat-dialog-content>
+    <div style="display: grid;">
+        <mat-form-field appearance="fill">
+            <mat-label>Score</mat-label>
+            <input matInput [(ngModel)]="data.score" required="true" type="text" min="1" [max]="data.maxScore">
+        </mat-form-field>
+        <mat-slider min="1" [max]="data.maxScore" step="1">
+            <input matSliderThumb [(ngModel)]="data.score">
+        </mat-slider>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="data.score" [disabled]="data.score>data.maxScore||data.score<1">Send</button>
+</div>

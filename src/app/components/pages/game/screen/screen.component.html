@@ -6,20 +6,36 @@
     <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
         <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
     </div>
-    <div id="table"
-        *ngSwitchCase="gameState === 'choose-questions' || gameState === 'choose-player-start' || gameState ==='question-i-j' ? gameState : ''">
-        <table mat-table [dataSource]="questions">
-            <ng-container cdkColumnDef="name">
-                <td cdk-cell *cdkCellDef="let element"> {{element.name}} </td>
-            </ng-container>
-            <ng-container *ngFor="let item of [].constructor(maxColumns());let i = index" cdkColumnDef="{{i}}">
-                <td cdk-cell *cdkCellDef="let element; let j = index;"
-                    [@choose]="gameState==='question-i-j'&&j===position.j&&i===position.i?true:false"
-                    (click)="element.prices[i]&&chooser===playerName?sendChooseQuestion(i,j):undefined">
-                    {{element.prices[i]?element.prices[i]:'⠀⠀⠀⠀⠀'}}
-                </td>
-            </ng-container>
-            <tr cdk-row *cdkRowDef="let row; columns: columns(maxColumns());"></tr>
-        </table>
+    <div *ngIf="typeRound==='default'" class="table">
+        <div class="table"
+            *ngSwitchCase="gameState === 'choose-questions' || gameState === 'choose-player-start' || gameState ==='question-i-j'? gameState : ''">
+            <table mat-table [dataSource]="questions">
+                <ng-container cdkColumnDef="name">
+                    <td cdk-cell *cdkCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+                <ng-container *ngFor="let item of [].constructor(maxColumns());let i = index" cdkColumnDef="{{i}}">
+                    <td cdk-cell *cdkCellDef="let element; let j = index;"
+                        [@choose]="gameState==='question-i-j'&&j===position.j&&i===position.i?true:false"
+                        (click)="element.prices[i]&&chooser===playerName?sendChooseQuestion(i,j):undefined">
+                        {{element.prices[i]?element.prices[i]:'⠀⠀⠀⠀⠀'}}
+                    </td>
+                </ng-container>
+                <tr cdk-row *cdkRowDef="let row; columns: columns(maxColumns());"></tr>
+            </table>
+        </div>
+    </div>
+    <div *ngIf="typeRound==='final'" class="table">
+        <div class="table"
+            *ngSwitchCase="gameState === 'theme-i' || gameState === 'choose-player-start' || gameState ==='choose-theme'? gameState : ''">
+            <table mat-table [dataSource]="questions">
+                <ng-container cdkColumnDef="name">
+                    <td cdk-cell *cdkCellDef="let element;let i = index"
+                        [@choose]="gameState==='theme-i'&&i===position.i"
+                        (click)="element.name!=='⠀'&&chooser===playerName?sendChooseTheme(i):undefined">
+                        {{element.name}} </td>
+                </ng-container>
+                <tr cdk-row *cdkRowDef="let row; columns: ['name'];"></tr>
+            </table>
+        </div>
     </div>
 </div>

@@ -22,6 +22,7 @@ export class SocketService {
   private chooserSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private questionsSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
   private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: 0, j: 0 });
+  private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
   public players = this.playersSubject.asObservable();
   public showman = this.showmanSubject.asObservable();
   public maxPlayers = this.maxPlayersSubject.asObservable();
@@ -31,6 +32,7 @@ export class SocketService {
   public chooser = this.chooserSubject.asObservable();
   public questions = this.questionsSubject.asObservable();
   public position = this.positionSubject.asObservable();
+  public typeRound = this.typeRoundSubject.asObservable();
   public gameId = '';
 
   constructor(private socket: Socket, private router: Router) {
@@ -62,7 +64,7 @@ export class SocketService {
       const players = this.playersSubject.getValue();
       players.forEach((player) => {
         if (player.id === playerId) {
-          player.state = player.state === "not-ready" ? "ready" : "not-ready";
+          player.state = player.state === "Not ready" ? "Ready" : "Not ready";
         }
       });
       this.playersSubject.next(players);
@@ -86,6 +88,7 @@ export class SocketService {
     });
 
     this.socket.on("show-round-themes", (data: any) => {
+      this.typeRoundSubject.next(data.typeRound);
       this.gameStateSubject.next(data.gameState);
       this.themesSubject.next(data.themes);
       this.roundNameSubject.next(data.roundName);
@@ -93,6 +96,17 @@ export class SocketService {
     });
 
     this.socket.on("choose-questions", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.chooserSubject.next(data.chooser);
+      console.log(data);
+    });
+
+    this.socket.on("rates", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      console.log(data);
+    });
+
+    this.socket.on("choose-theme", (data: any) => {
       this.gameStateSubject.next(data.gameState);
       this.chooserSubject.next(data.chooser);
       console.log(data);
@@ -109,12 +123,29 @@ export class SocketService {
       console.log(data);
     });
 
+    this.socket.on("questions-final", (data: any) => {
+      this.questionsSubject.next(data.questions);
+      this.playersSubject.next(data.players);
+      console.log(data);
+    });
+
     this.socket.on('question-i-j', (data: any) => {
       this.gameStateSubject.next(data.gameState);
       this.positionSubject.next({ i: data.i, j: data.j });
       setTimeout(() => {
         let newQuestions = this.questionsSubject.getValue();
         newQuestions[data.j].prices[data.i] = '';
+        this.questionsSubject.next(newQuestions);
+      }, 1000);
+      console.log(data);
+    });
+
+    this.socket.on('theme-i', (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      this.positionSubject.next({ i: data.i, j: -1 });
+      setTimeout(() => {
+        let newQuestions = this.questionsSubject.getValue();
+        newQuestions[data.i].name = '⠀';
         this.questionsSubject.next(newQuestions);
       }, 1000);
       console.log(data);
@@ -133,6 +164,14 @@ export class SocketService {
 
   sendChooseQuestion(i: number, j: number) {
     this.socket.emit("choose-question", { i, j, gameId: this.gameId });
+  }
+
+  sendChooseTheme(i: number) {
+    this.socket.emit("choose-theme", { i, gameId: this.gameId });
+  }
+
+  sendRate(score: number) {
+    this.socket.emit("send-rate", { score, gameId: this.gameId });
   }
 
   upload(file: File) {

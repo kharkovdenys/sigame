@@ -48,7 +48,7 @@ app-players {
     display: flex;
 }
 
-app-screen {
+#right-part {
     height: 100%;
     width: 75%;
 }

@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import Player from 'src/app/interfaces/Player';
@@ -7,6 +8,7 @@ import Question from 'src/app/interfaces/Question';
 import Showman from 'src/app/interfaces/Showman';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
+import { DialogRates } from './ratesdialog/ratesdialog.component';
 
 @Component({
   selector: 'app-game',
@@ -38,10 +40,13 @@ export class GameComponent implements OnDestroy {
   questionsSub?: Subscription;
   position: Position = { i: 0, j: 0 };
   positionSub?: Subscription;
+  typeRound: 'final' | 'default' = 'default';
+  typeRoundSub?: Subscription;
 
   constructor(
     private router: Router,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public dialog: MatDialog
   ) {
     this.playersSub = this.socketService.players.subscribe(players => this.players = players);
     this.questionsSub = this.socketService.questions.subscribe(questions => this.questions = questions);
@@ -51,16 +56,35 @@ export class GameComponent implements OnDestroy {
     this.gameStateSub = this.socketService.gameState.subscribe(gameState => {
       this.gameState = gameState;
       this.intervalSub?.unsubscribe();
-      if (gameState === 'choose-player-start' || gameState === 'choose-questions') {
+      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates') {
         this.seconds = this.secondsMax;
         this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
+      }
+      this.role !== 'showman' ? this.dialog.closeAll() : undefined;
+      if (gameState === 'rates' && this.role === 'player' && this.players.filter(p => p.id === this.socketService.getId())[0].state !== 'Not a finalist') {
+        this.openDialog();
       }
     });
     this.positionSub = this.socketService.position.subscribe(position => this.position = position);
     this.themesSub = this.socketService.themes.subscribe(themes => this.themes = themes);
     this.roundNameSub = this.socketService.roundName.subscribe(roundName => this.roundName = roundName);
+    this.typeRoundSub = this.socketService.typeRound.subscribe(typeRound => this.typeRound = typeRound);
     this.gameId = this.socketService.gameId;
     this.role = this.socketService.getId() === this.showman.id ? 'showman' : 'player';
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogRates, {
+      disableClose: true,
+      data: { score: 1, maxScore: this.players.filter(p => p.id === this.socketService.getId())[0].score },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (result !== undefined && result > 0) {
+        this.socketService.sendRate(result);
+      }
+    });
   }
 
   start() {
@@ -96,6 +120,7 @@ export class GameComponent implements OnDestroy {
     this.intervalSub?.unsubscribe();
     this.questionsSub?.unsubscribe();
     this.positionSub?.unsubscribe();
+    this.typeRoundSub?.unsubscribe();
   }
 
 }

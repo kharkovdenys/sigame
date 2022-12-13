@@ -14,17 +14,13 @@ export class PlayersComponent {
     private socketService: SocketService
   ) { }
 
-  @Input() players!: Player[];
+  @Input() players: Player[] = [];
   @Input() maxPlayers!: number;
   @Input() gameState!: string;
   @Input() seconds!: number;
   @Input() secondsMax!: number;
   @Input() chooser!: string;
   @Input() role!: 'showman' | 'player';
-
-  typeOf(value: any) {
-    return typeof value;
-  }
 
   choosePlayer(playerName: string) {
     if (this.gameState === 'choose-player-start' && this.role === 'showman') {

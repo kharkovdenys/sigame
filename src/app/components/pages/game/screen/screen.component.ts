@@ -52,6 +52,8 @@ export class ScreenComponent {
   @Input() questions!: Question[];
   @Input() playerName: string | undefined;
   @Input() position!: Position;
+  @Input() typeRound!: 'final' | 'default';
+
   columns(max: number): string[] {
     var input = ['name'];
     for (var i = 0; i < max; i += 1) {
@@ -59,6 +61,7 @@ export class ScreenComponent {
     }
     return input;
   };
+
   maxColumns(): number {
     let i = 0;
     for (const questions of this.questions) {
@@ -73,6 +76,9 @@ export class ScreenComponent {
     this.socketService.sendChooseQuestion(i, j);
   }
 
+  sendChooseTheme(i: number) {
+    this.socketService.sendChooseTheme(i);
+  }
 
   getThemes() {
     let str = '';
@@ -83,7 +89,7 @@ export class ScreenComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['gameState'].currentValue === 'show-round-themes') {
+    if (changes['gameState'] && changes['gameState'].currentValue === 'show-round-themes') {
       let i = 0;
       const changeRoundThemesText = () => {
         if (i === 0) {
