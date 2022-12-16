@@ -1,15 +1,18 @@
 <div id="game-part">
     <div id="top-part">
         <div id="showman-part" class="center">
-            <mat-card class="showman-card" [style.background-color]="showman.id === ''? '#CDCDCD':'#fff'">
+            <mat-card id="comment" class="center" [style.font-size]="gameState==='show-themes'?'10px':'14px'">
+                {{comment}}
+            </mat-card>
+            <mat-card class="showman-card" [style.background-color]="showman?.id === ''? '#CDCDCD':'#fff'">
                 <div class="center">
                     <mat-card-header>
-                        <mat-card-title class="text-center">{{showman.name}}</mat-card-title>
+                        <mat-card-title class="text-center">{{showman?.name}}</mat-card-title>
                         <mat-card-subtitle class="text-center">Showman</mat-card-subtitle>
                     </mat-card-header>
                 </div>
                 <div id="showman-image">
-                    <img mat-card-image src="https://avatars.dicebear.com/api/avataaars/{{showman.name}}.svg"
+                    <img mat-card-image src="https://avatars.dicebear.com/api/avataaars/{{showman?.name}}.svg"
                         alt="Showman" style="
                         max-width: 100%;
                         max-height: 100%;
@@ -40,7 +43,7 @@
             <button mat-button (click)="leave()">Leave the game</button>
         </div>
         <app-players [players]="players" [maxPlayers]="maxPlayers" [gameState]="gameState" [seconds]="seconds"
-            [secondsMax]="secondsMax" [chooser]="chooser" [role]="role">
+            [secondsMax]="secondsMax" [chooser]="chooser" [role]="role" style="width: 75%">
         </app-players>
     </div>
 </div>

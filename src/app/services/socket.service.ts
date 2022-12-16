@@ -33,7 +33,8 @@ export class SocketService {
   public questions = this.questionsSubject.asObservable();
   public position = this.positionSubject.asObservable();
   public typeRound = this.typeRoundSubject.asObservable();
-  public gameId = '';
+  public gameId?: string;
+  public packInfo?: string;
 
   constructor(private socket: Socket, private router: Router) {
 
@@ -96,8 +97,8 @@ export class SocketService {
     });
 
     this.socket.on("choose-questions", (data: any) => {
-      this.gameStateSubject.next(data.gameState);
       this.chooserSubject.next(data.chooser);
+      this.gameStateSubject.next(data.gameState);
       console.log(data);
     });
 
@@ -107,8 +108,8 @@ export class SocketService {
     });
 
     this.socket.on("choose-theme", (data: any) => {
-      this.gameStateSubject.next(data.gameState);
       this.chooserSubject.next(data.chooser);
+      this.gameStateSubject.next(data.gameState);
       console.log(data);
     });
 
@@ -130,8 +131,8 @@ export class SocketService {
     });
 
     this.socket.on('question-i-j', (data: any) => {
-      this.gameStateSubject.next(data.gameState);
       this.positionSubject.next({ i: data.i, j: data.j });
+      this.gameStateSubject.next(data.gameState);
       setTimeout(() => {
         let newQuestions = this.questionsSubject.getValue();
         newQuestions[data.j].prices[data.i] = '';
@@ -141,8 +142,8 @@ export class SocketService {
     });
 
     this.socket.on('theme-i', (data: any) => {
-      this.gameStateSubject.next(data.gameState);
       this.positionSubject.next({ i: data.i, j: -1 });
+      this.gameStateSubject.next(data.gameState);
       setTimeout(() => {
         let newQuestions = this.questionsSubject.getValue();
         newQuestions[data.i].name = '⠀';
@@ -214,6 +215,7 @@ export class SocketService {
         this.maxPlayersSubject.next(data.maxPlayers);
         this.gameStateSubject.next(data.gameState);
         this.gameId = data.gameId;
+        this.packInfo = data.packInfo;
         this.router.navigate(['/game']);
       }
       else {
@@ -230,6 +232,7 @@ export class SocketService {
         this.maxPlayersSubject.next(data.maxPlayers);
         this.gameStateSubject.next(data.gameState);
         this.gameId = data.gameId;
+        this.packInfo = data.packInfo;
         this.router.navigate(['/game']);
       }
       else {

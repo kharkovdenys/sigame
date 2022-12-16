@@ -46,13 +46,13 @@ export class ScreenComponent {
   @Input() gameState!: string;
   expectation: string = 'Waiting for the start';
   @Input() themes!: Theme[];
-  @Input() roundName!: string;
-  @Input() chooser!: string;
-  roundThemesText = '';
+  @Input() roundName?: string;
+  @Input() chooser?: string;
+  roundThemesText?: string;
   @Input() questions!: Question[];
   @Input() playerName: string | undefined;
   @Input() position!: Position;
-  @Input() typeRound!: 'final' | 'default';
+  @Input() typeRound?: 'final' | 'default';
 
   columns(max: number): string[] {
     var input = ['name'];

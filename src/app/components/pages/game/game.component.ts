@@ -16,12 +16,12 @@ import { DialogRates } from './ratesdialog/ratesdialog.component';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnDestroy {
-  showman: Showman = { id: '', name: '⠀' };
-  gameId: string;
-  maxPlayers: number = 5;
+  showman?: Showman;
+  gameId?: string;
+  maxPlayers?: number;
   role: 'showman' | 'player';
   gameState = "waiting-ready";
-  roundName = '';
+  roundName?: string;
   players: Player[] = [];
   themes: Theme[] = [];
   playersSub?: Subscription;
@@ -34,14 +34,15 @@ export class GameComponent implements OnDestroy {
   seconds = 0;
   interval = interval(1000);
   intervalSub?: Subscription;
-  chooser = '';
+  chooser?: string;
   chooserSub?: Subscription;
   questions: Question[] = [];
   questionsSub?: Subscription;
   position: Position = { i: 0, j: 0 };
   positionSub?: Subscription;
-  typeRound: 'final' | 'default' = 'default';
+  typeRound?: 'final' | 'default';
   typeRoundSub?: Subscription;
+  comment = 'Waiting for the start';
 
   constructor(
     private router: Router,
@@ -55,6 +56,17 @@ export class GameComponent implements OnDestroy {
     this.chooserSub = this.socketService.chooser.subscribe(chooser => this.chooser = chooser);
     this.gameStateSub = this.socketService.gameState.subscribe(gameState => {
       this.gameState = gameState;
+      switch (gameState) {
+        case 'waiting-ready': { this.comment = 'Waiting for the start'; break; }
+        case 'show-themes': { this.comment = this.socketService.packInfo ?? ''; break; }
+        case 'show-round-themes': { this.comment = this.typeRound === 'default' ? 'Themes of the round' : 'The final. Participants who do not have a positive score are knocked out'; break; }
+        case 'choose-player-start': { this.comment = 'The showman chooses who starts the game'; break; }
+        case 'choose-questions': { this.comment = this.chooser + ' chooses a question'; break; }
+        case 'choose-theme': { this.comment = this.chooser + "chooses a theme he doesn't want"; break; }
+        case 'question-i-j': { this.comment = 'The question will be ' + this.questions[this.position.j].name + ' ' + this.questions[this.position.j].prices[this.position.i]; break; }
+        case 'theme-i': { this.comment = 'The theme will not be ' + this.themes[this.position.i].name; break; }
+        case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
+      }
       this.intervalSub?.unsubscribe();
       if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates') {
         this.seconds = this.secondsMax;
@@ -70,7 +82,7 @@ export class GameComponent implements OnDestroy {
     this.roundNameSub = this.socketService.roundName.subscribe(roundName => this.roundName = roundName);
     this.typeRoundSub = this.socketService.typeRound.subscribe(typeRound => this.typeRound = typeRound);
     this.gameId = this.socketService.gameId;
-    this.role = this.socketService.getId() === this.showman.id ? 'showman' : 'player';
+    this.role = this.socketService.getId() === this.showman?.id ? 'showman' : 'player';
   }
 
   openDialog(): void {

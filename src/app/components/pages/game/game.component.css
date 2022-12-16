@@ -42,8 +42,6 @@
 }
 
 app-players {
-    width: 75%;
-    height: 100%;
     justify-content: space-evenly;
     display: flex;
 }
@@ -51,4 +49,11 @@ app-players {
 #right-part {
     height: 100%;
     width: 75%;
+}
+
+#comment {
+    width: 75%;
+    height: 25%;
+    margin-bottom: 15px;
+    white-space: pre;
 }

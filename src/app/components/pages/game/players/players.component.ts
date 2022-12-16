@@ -15,11 +15,11 @@ export class PlayersComponent {
   ) { }
 
   @Input() players: Player[] = [];
-  @Input() maxPlayers!: number;
+  @Input() maxPlayers?: number;
   @Input() gameState!: string;
   @Input() seconds!: number;
   @Input() secondsMax!: number;
-  @Input() chooser!: string;
+  @Input() chooser?: string;
   @Input() role!: 'showman' | 'player';
 
   choosePlayer(playerName: string) {
