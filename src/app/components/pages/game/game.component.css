@@ -55,5 +55,5 @@ app-players {
     width: 75%;
     height: 25%;
     margin-bottom: 15px;
-    white-space: pre;
+    text-align: center;
 }
