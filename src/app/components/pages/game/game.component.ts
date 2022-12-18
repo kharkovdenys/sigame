@@ -43,6 +43,7 @@ export class GameComponent implements OnDestroy {
   typeRound?: 'final' | 'default';
   typeRoundSub?: Subscription;
   comment = 'Waiting for the start';
+  playerName?: string;
 
   constructor(
     private router: Router,
@@ -82,7 +83,11 @@ export class GameComponent implements OnDestroy {
     this.roundNameSub = this.socketService.roundName.subscribe(roundName => this.roundName = roundName);
     this.typeRoundSub = this.socketService.typeRound.subscribe(typeRound => this.typeRound = typeRound);
     this.gameId = this.socketService.gameId;
-    this.role = this.socketService.getId() === this.showman?.id ? 'showman' : 'player';
+    const id = this.socketService.getId();
+    this.role = id === this.showman?.id ? 'showman' : 'player';
+    const player = this.players.filter(p => p.id === id);
+    if (player.length)
+      this.playerName = player[0].name;
   }
 
   openDialog(): void {
@@ -110,15 +115,6 @@ export class GameComponent implements OnDestroy {
 
   changeReady() {
     this.socketService.changeReady();
-  }
-
-  getPlayerName(): string | undefined {
-    const id = this.socketService.getId();
-    const player = this.players.filter(p => p.id === id);
-    if (player.length)
-      return player[0].name;
-    else
-      return undefined;
   }
 
   ngOnDestroy(): void {

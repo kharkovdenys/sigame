@@ -53,7 +53,15 @@ export class SocketService {
     this.socket.on("leave-game", (id: string) => {
       console.log("leave-game");
       let players = this.playersSubject.getValue();
-      players = players.filter((player) => player.id !== id);
+      for (const i in players) {
+        if (players[i].id === id) {
+          if (this.gameStateSubject.getValue() !== "waiting-ready")
+            players[i].id = undefined;
+          else
+            players.splice(parseInt(i), 1);
+          break;
+        }
+      }
       this.playersSubject.next(players);
       if (this.showmanSubject.getValue().id === id) {
         this.showmanSubject.next({ id: '', name: '⠀' });
