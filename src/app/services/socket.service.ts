@@ -38,6 +38,7 @@ export class SocketService {
   public atom = this.atomSubject.asObservable();
   public gameId?: string;
   public packInfo?: string;
+  public comment: string = '';
 
   constructor(private socket: Socket, private router: Router) {
 
@@ -100,6 +101,13 @@ export class SocketService {
     });
 
     this.socket.on("show-question", (data: any) => {
+      this.atomSubject.next(data.atom);
+      this.gameStateSubject.next(data.gameState);
+      console.log(data);
+    });
+
+    this.socket.on("answer", (data: any) => {
+      this.comment = data.comment;
       this.atomSubject.next(data.atom);
       this.gameStateSubject.next(data.gameState);
       console.log(data);

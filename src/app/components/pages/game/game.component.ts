@@ -67,6 +67,9 @@ export class GameComponent implements OnDestroy {
         case 'show-round-themes': { this.comment = this.typeRound === 'default' ? 'Themes of the round' : 'The final. Participants who do not have a positive score are knocked out'; break; }
         case 'choose-player-start': { this.comment = 'The showman chooses who starts the game'; break; }
         case 'choose-questions': { this.comment = this.chooser + ' chooses a question'; break; }
+        case 'show-question': { this.comment = "Current question"; break; }
+        case 'can-answer': { this.comment = "You can answer"; break; }
+        case 'answer': { this.comment = this.socketService.comment ? "Correct answer: " + this.socketService.comment : ''; break; }
         case 'choose-theme': { this.comment = this.chooser + "chooses a theme he doesn't want"; break; }
         case 'question-i-j': { this.comment = 'The question will be ' + this.questions[this.position.j].name + ' ' + this.questions[this.position.j].prices[this.position.i]; break; }
         case 'theme-i': { this.comment = 'The theme will not be ' + this.themes[this.position.i].name; break; }
