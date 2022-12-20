@@ -121,6 +121,10 @@ export class GameComponent implements OnDestroy {
     this.socketService.changeReady();
   }
 
+  skip() {
+    this.socketService.skip();
+  }
+
   ngOnDestroy(): void {
     this.socketService.leave();
     this.playersSub?.unsubscribe();

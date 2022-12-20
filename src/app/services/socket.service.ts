@@ -124,6 +124,11 @@ export class SocketService {
       console.log(data);
     });
 
+    this.socket.on("can-answer", (data: any) => {
+      this.gameStateSubject.next(data.gameState);
+      console.log(data);
+    });
+
     this.socket.on("choose-theme", (data: any) => {
       this.chooserSubject.next(data.chooser);
       this.gameStateSubject.next(data.gameState);
@@ -216,6 +221,12 @@ export class SocketService {
 
   start() {
     this.socket.emit("start", { gameId: this.gameId }, (status: any) => {
+      console.log(status);
+    });
+  }
+
+  skip() {
+    this.socket.emit("skip", { gameId: this.gameId }, (status: any) => {
       console.log(status);
     });
   }

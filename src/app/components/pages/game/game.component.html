@@ -36,7 +36,10 @@
     </div>
     <div id="bottom-part">
         <div id="actions" class="center">
-            <button mat-button *ngIf="role==='player'&&gameState==='show-question'">Answer the question</button>
+            <button mat-button *ngIf="role==='player'&&(gameState==='show-question'||gameState==='can-answer')">Answer
+                the
+                question</button>
+            <button mat-button (click)="skip()" *ngIf="role==='showman'&&gameState!=='waiting-ready'">Skip</button>
             <button mat-button (click)="start()" *ngIf="role==='showman'&&gameState==='waiting-ready'">Start the
                 game</button>
             <button mat-button (click)="changeReady()" *ngIf="role==='player'&&gameState==='waiting-ready'">Change

@@ -30,6 +30,31 @@ import { environment } from 'src/environments/environment';
       ]
       )
     ]),
+    trigger('loading', [
+      transition(
+        '* => can-answer', [
+        style({ 'border': '4px', 'border-color': 'white', 'border-style': 'solid' }),
+        animate('15s', keyframes([
+          style(
+            {
+              'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px), 4px 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0
+            }),
+          style(
+            {
+              'clip-path': 'polygon(0 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0.25
+            }),
+          style({
+            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, 100% 0%, 0% 0%)', offset: 0.5
+          }),
+          style({
+            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%)', offset: 0.75
+          }),
+          style({
+            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%)', offset: 1
+          }),
+        ]))]
+      )
+    ]),
     trigger('read', [
       transition(
         ':enter',
