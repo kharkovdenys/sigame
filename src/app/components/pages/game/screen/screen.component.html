@@ -6,6 +6,32 @@
     <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
         <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
     </div>
+    <div *ngSwitchCase="'show-question'" id="show-question" class="center" [ngSwitch]="atom?.type">
+        <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''" [@read]>
+            <p class="line" *ngFor="let line of (atom?.text??'').split('\n')">
+                <span class="word" *ngFor="let word of line.split(' ')">
+                    <span class="letter" *ngFor="let letter of word.split('')">
+                        {{letter}}
+                    </span>
+                </span>
+            </p>
+        </div>
+        <img *ngSwitchCase="'image'" src="{{apiUrl}}/image/{{gameId}}?{{atom?.text}}" style="
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    ">
+        <audio *ngSwitchCase="'voice'" autoplay>
+            <source src="{{apiUrl}}/audio/{{gameId}}?{{atom?.text}}" type="audio/mpeg">
+        </audio>
+        <video *ngSwitchCase="'video'" autoplay style="
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    ">
+            <source src="{{apiUrl}}/video/{{gameId}}?{{atom?.text}}" type="video/mp4">
+        </video>
+    </div>
     <div *ngIf="typeRound==='default'" class="table">
         <div class="table"
             *ngSwitchCase="gameState === 'choose-questions' || gameState === 'choose-player-start' || gameState ==='question-i-j'? gameState : ''">

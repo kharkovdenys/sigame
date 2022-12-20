@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
+import Atom from '../interfaces/Atom';
 import Game from '../interfaces/Game';
 import Player from '../interfaces/Player';
 import Position from '../interfaces/Position';
@@ -23,6 +24,7 @@ export class SocketService {
   private questionsSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
   private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: 0, j: 0 });
   private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
+  private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ type: 'default' });
   public players = this.playersSubject.asObservable();
   public showman = this.showmanSubject.asObservable();
   public maxPlayers = this.maxPlayersSubject.asObservable();
@@ -33,6 +35,7 @@ export class SocketService {
   public questions = this.questionsSubject.asObservable();
   public position = this.positionSubject.asObservable();
   public typeRound = this.typeRoundSubject.asObservable();
+  public atom = this.atomSubject.asObservable();
   public gameId?: string;
   public packInfo?: string;
 
@@ -93,6 +96,12 @@ export class SocketService {
       this.gameStateSubject.next(data.gameState);
       this.maxPlayersSubject.next(data.maxPlayers);
       this.themesSubject.next(data.themes);
+      console.log(data);
+    });
+
+    this.socket.on("show-question", (data: any) => {
+      this.atomSubject.next(data.atom);
+      this.gameStateSubject.next(data.gameState);
       console.log(data);
     });
 

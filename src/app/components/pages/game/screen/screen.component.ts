@@ -1,9 +1,11 @@
-import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, query, style, transition, trigger, stagger } from '@angular/animations';
 import { Component, Input, SimpleChanges } from '@angular/core';
+import Atom from 'src/app/interfaces/Atom';
 import Position from 'src/app/interfaces/Position';
 import Question from 'src/app/interfaces/Question';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-screen',
@@ -27,6 +29,15 @@ import { SocketService } from 'src/app/services/socket.service';
         ]))
       ]
       )
+    ]),
+    trigger('read', [
+      transition(
+        ':enter',
+        query('.letter', [
+          style({ color: '#fff' }),
+          stagger(200, animate(100, style({ color: '#0ff' }))),
+        ])
+      ),
     ]),
     trigger('choose', [
       transition('false => true', animate('1s', keyframes([
@@ -53,6 +64,9 @@ export class ScreenComponent {
   @Input() playerName: string | undefined;
   @Input() position!: Position;
   @Input() typeRound?: 'final' | 'default';
+  @Input() atom?: Atom;
+  @Input() gameId?: string;
+  apiUrl = environment.apiUrl;
 
   columns(max: number): string[] {
     var input = ['name'];

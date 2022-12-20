@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
+import Atom from 'src/app/interfaces/Atom';
 import Player from 'src/app/interfaces/Player';
 import Position from 'src/app/interfaces/Position';
 import Question from 'src/app/interfaces/Question';
@@ -44,6 +45,8 @@ export class GameComponent implements OnDestroy {
   typeRoundSub?: Subscription;
   comment = 'Waiting for the start';
   playerName?: string;
+  atom?: Atom;
+  atomSub?: Subscription;
 
   constructor(
     private router: Router,
@@ -55,6 +58,7 @@ export class GameComponent implements OnDestroy {
     this.showmanSub = this.socketService.showman.subscribe(showman => this.showman = showman);
     this.maxPlayersSub = this.socketService.maxPlayers.subscribe(maxPlayers => this.maxPlayers = maxPlayers);
     this.chooserSub = this.socketService.chooser.subscribe(chooser => this.chooser = chooser);
+    this.atomSub = this.socketService.atom.subscribe(atom => this.atom = atom);
     this.gameStateSub = this.socketService.gameState.subscribe(gameState => {
       this.gameState = gameState;
       switch (gameState) {
@@ -129,6 +133,7 @@ export class GameComponent implements OnDestroy {
     this.questionsSub?.unsubscribe();
     this.positionSub?.unsubscribe();
     this.typeRoundSub?.unsubscribe();
+    this.atomSub?.unsubscribe();
   }
 
 }
