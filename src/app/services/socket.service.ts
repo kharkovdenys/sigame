@@ -22,7 +22,7 @@ export class SocketService {
   private roundNameSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private chooserSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private questionsSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
-  private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: 0, j: 0 });
+  private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: -1, j: -1 });
   private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
   private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ type: 'default' });
   public players = this.playersSubject.asObservable();
@@ -42,11 +42,10 @@ export class SocketService {
 
   constructor(private socket: Socket, private router: Router) {
 
-    this.socket.on("player-joined", (player: Player) => {
-      console.log("player joined", player);
-      const players = this.playersSubject.getValue();
-      players.push(player);
-      this.playersSubject.next(players);
+    this.socket.on("player-joined", (data: any) => {
+      console.log("players", data);
+      this.playersSubject.next(data.players);
+      this.chooserSubject.next(data.chooser);
     });
 
     this.socket.on('showman-joined', (showman: Showman) => {
@@ -249,6 +248,11 @@ export class SocketService {
         this.playersSubject.next(data.players);
         this.showmanSubject.next(data.showman);
         this.maxPlayersSubject.next(data.maxPlayers);
+        this.themesSubject.next(data.themes);
+        this.roundNameSubject.next(data.roundName);
+        this.chooserSubject.next(data.chooser);
+        this.questionsSubject.next(data.questions);
+        this.typeRoundSubject.next(data.typeRound);
         this.gameStateSubject.next(data.gameState);
         this.gameId = data.gameId;
         this.packInfo = data.packInfo;
