@@ -75,7 +75,7 @@ export class GameComponent implements OnDestroy {
         case 'answer': { this.comment = this.socketService.comment ? "Correct answer: " + this.socketService.comment : ''; break; }
         case 'choose-theme': { this.comment = this.chooser + "chooses a theme he doesn't want"; break; }
         case 'question-i-j': { this.comment = 'The question will be ' + this.questions[this.position.j].name + ' ' + this.questions[this.position.j].prices[this.position.i]; break; }
-        case 'theme-i': { this.comment = 'The theme will not be ' + this.themes[this.position.i].name; break; }
+        case 'theme-i': { this.comment = 'The theme will not be ' + this.questions[this.position.i].name; break; }
         case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
       }
       this.intervalSub?.unsubscribe();
