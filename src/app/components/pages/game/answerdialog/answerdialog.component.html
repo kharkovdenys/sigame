@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Did the player give the correct answer?</h1>
+<div mat-dialog-content>
+    <mat-label>Correct answer: {{data.answer}}</mat-label>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">No</button>
+    <button mat-button [mat-dialog-close]="true">Yes</button>
+</div>

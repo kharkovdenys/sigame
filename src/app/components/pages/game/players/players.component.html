@@ -16,7 +16,7 @@
             {{players.length>i?gameState!=='waiting-ready'?players[i].score:
             players[i].state:'⠀'}}</div>
         <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
-            *ngIf="(gameState==='choose-questions'||gameState==='choose-theme')&&chooser===players[i].name">
+            *ngIf="(gameState==='choose-questions'||gameState==='choose-theme'||gameState==='answering')&&chooser===players[i].name">
         </mat-progress-bar>
     </mat-card>
 </div>

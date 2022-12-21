@@ -34,7 +34,7 @@ import { environment } from 'src/environments/environment';
       transition(
         '* => can-answer', [
         style({ 'border': '4px', 'border-color': 'white', 'border-style': 'solid' }),
-        animate('15s', keyframes([
+        animate('{{time}}s', keyframes([
           style(
             {
               'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px), 4px 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0
@@ -125,6 +125,10 @@ export class ScreenComponent {
       str += theme.name + '\n';
     }
     return str;
+  }
+
+  timing() {
+    return this.socketService.timing;
   }
 
   ngOnChanges(changes: SimpleChanges) {

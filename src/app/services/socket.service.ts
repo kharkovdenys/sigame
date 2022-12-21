@@ -39,6 +39,8 @@ export class SocketService {
   public gameId?: string;
   public packInfo?: string;
   public comment: string = '';
+  public timing: number = 15;
+  public answer: string = '';
 
   constructor(private socket: Socket, private router: Router) {
 
@@ -83,6 +85,7 @@ export class SocketService {
     });
 
     this.socket.on("player-change-score", (data: any) => {
+      console.log(data);
       const players = this.playersSubject.getValue();
       players.forEach((player) => {
         if (player.name === data.playerName) {
@@ -132,8 +135,20 @@ export class SocketService {
     });
 
     this.socket.on("can-answer", (data: any) => {
+      this.timing = data.timing;
       this.gameStateSubject.next(data.gameState);
       console.log(data);
+    });
+
+    this.socket.on("answering", (data: any) => {
+      this.chooserSubject.next(data.chooser);
+      this.gameStateSubject.next(data.gameState);
+      console.log(data);
+    });
+
+    this.socket.on("correct-answer", (answer: string) => {
+      this.answer = answer;
+      console.log(answer);
     });
 
     this.socket.on("choose-theme", (data: any) => {
@@ -202,6 +217,14 @@ export class SocketService {
 
   sendRate(score: number) {
     this.socket.emit("send-rate", { score, gameId: this.gameId });
+  }
+
+  clickForAnswer() {
+    this.socket.emit("click-for-answer", { gameId: this.gameId });
+  }
+
+  sendAnswerResult(result: boolean) {
+    this.socket.emit("send-answer-result", { gameId: this.gameId, result, chooser: this.chooserSubject.getValue() });
   }
 
   upload(file: File) {

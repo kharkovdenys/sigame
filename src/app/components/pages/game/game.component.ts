@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import Atom from 'src/app/interfaces/Atom';
@@ -9,6 +9,7 @@ import Question from 'src/app/interfaces/Question';
 import Showman from 'src/app/interfaces/Showman';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
+import { DialogAnswer } from './answerdialog/answerdialog.component';
 import { DialogRates } from './ratesdialog/ratesdialog.component';
 
 @Component({
@@ -47,6 +48,7 @@ export class GameComponent implements OnDestroy {
   playerName?: string;
   atom?: Atom;
   atomSub?: Subscription;
+  dialogRefAnswer?: MatDialogRef<DialogAnswer, any>
 
   constructor(
     private router: Router,
@@ -67,6 +69,7 @@ export class GameComponent implements OnDestroy {
         case 'show-round-themes': { this.comment = this.typeRound === 'default' ? 'Themes of the round' : 'The final. Participants who do not have a positive score are knocked out'; break; }
         case 'choose-player-start': { this.comment = 'The showman chooses who starts the game'; break; }
         case 'choose-questions': { this.comment = this.chooser + ' chooses a question'; break; }
+        case 'answering': { this.comment = this.chooser + ' is now answering the question'; break; }
         case 'show-question': { this.comment = "Current question"; break; }
         case 'can-answer': { this.comment = "You can answer"; break; }
         case 'answer': { this.comment = this.socketService.comment ? "Correct answer: " + this.socketService.comment : ''; break; }
@@ -76,13 +79,18 @@ export class GameComponent implements OnDestroy {
         case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
       }
       this.intervalSub?.unsubscribe();
-      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates') {
+      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering') {
         this.seconds = this.secondsMax;
         this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
       }
       this.role !== 'showman' ? this.dialog.closeAll() : undefined;
       if (gameState === 'rates' && this.role === 'player' && this.players.filter(p => p.id === this.socketService.getId())[0].state !== 'Not a finalist') {
         this.openDialog();
+      }
+      this.dialogRefAnswer?.close();
+      if (gameState === 'answering' && this.role === 'showman') {
+        this.dialog.closeAll();
+        this.openAnswerDialog();
       }
     });
     this.positionSub = this.socketService.position.subscribe(position => this.position = position);
@@ -111,6 +119,18 @@ export class GameComponent implements OnDestroy {
     });
   }
 
+  openAnswerDialog(): void {
+    this.dialogRefAnswer = this.dialog.open(DialogAnswer, {
+      disableClose: true,
+      data: { answer: this.socketService.answer },
+    });
+
+    this.dialogRefAnswer.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      this.socketService.sendAnswerResult(result ?? false);
+    });
+  }
+
   start() {
     this.socketService.start();
   }
@@ -126,6 +146,11 @@ export class GameComponent implements OnDestroy {
 
   skip() {
     this.socketService.skip();
+  }
+
+  clickForAnswer() {
+    if (this.gameState !== 'answer')
+      this.socketService.clickForAnswer();
   }
 
   ngOnDestroy(): void {

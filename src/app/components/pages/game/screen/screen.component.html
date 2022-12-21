@@ -1,5 +1,5 @@
 <div id="screen" [ngSwitch]="gameState">
-    <div [@loading]="gameState"
+    <div [@loading]="{value:gameState,params:{time:timing()}}"
         style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;"></div>
     <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
     <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
@@ -8,7 +8,7 @@
     <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
         <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
     </div>
-    <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'?gameState:''"
+    <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering'?gameState:''"
         id="show-question" class="center" [ngSwitch]="atom?.type">
         <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''" [@read]>
             <p class="line" *ngFor="let line of (atom?.text??'').split('\n')">

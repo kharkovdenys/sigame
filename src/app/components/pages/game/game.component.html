@@ -36,7 +36,7 @@
     </div>
     <div id="bottom-part">
         <div id="actions" class="center">
-            <button mat-button
+            <button mat-button (click)="clickForAnswer()"
                 *ngIf="role==='player'&&(gameState==='show-question'||gameState==='can-answer'||gameState==='answer')">Answer
                 the
                 question</button>
