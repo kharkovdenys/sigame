@@ -25,6 +25,7 @@ export class SocketService {
   private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: -1, j: -1 });
   private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
   private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ type: 'default' });
+  private role: 'showman' | 'player' = 'showman';
   public players = this.playersSubject.asObservable();
   public showman = this.showmanSubject.asObservable();
   public maxPlayers = this.maxPlayersSubject.asObservable();
@@ -43,6 +44,12 @@ export class SocketService {
   public answer: string = '';
 
   constructor(private socket: Socket, private router: Router) {
+
+    this.socket.on("connect", () => {
+      console.log("connect");
+      if (this.gameId)
+        this.join(this.gameId, this.role);
+    });
 
     this.socket.on("player-joined", (data: any) => {
       console.log("players", data);
@@ -263,6 +270,7 @@ export class SocketService {
 
   leave() {
     this.socket.emit("leave-room", this.gameId);
+    this.gameId = undefined;
   }
 
   join(gameId: string, type: 'player' | 'showman') {
@@ -277,9 +285,11 @@ export class SocketService {
         this.questionsSubject.next(data.questions);
         this.typeRoundSubject.next(data.typeRound);
         this.gameStateSubject.next(data.gameState);
+        this.role = this.socket.ioSocket.id === data.showman.id ? 'showman' : 'player';
         this.gameId = data.gameId;
         this.packInfo = data.packInfo;
-        this.router.navigate(['/game']);
+        if (this.router.url !== '/game')
+          this.router.navigate(['/game']);
       }
       else {
         console.log(data);
@@ -294,6 +304,7 @@ export class SocketService {
         this.showmanSubject.next(data.showman);
         this.maxPlayersSubject.next(data.maxPlayers);
         this.gameStateSubject.next(data.gameState);
+        this.role = 'showman';
         this.gameId = data.gameId;
         this.packInfo = data.packInfo;
         this.router.navigate(['/game']);
