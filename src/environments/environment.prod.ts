@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    socketUrl: 'https://sigrame-server.onrender.com/',
-    apiUrl: 'https://sigrame-server.onrender.com/api/v1'
+    socketUrl: 'https://sigame-server.glitch.me/',
+    apiUrl: 'https://sigame-server.glitch.me/api/v1'
 };
