@@ -89,3 +89,22 @@ table tr td:last-child {
     margin-block-start: 4px;
     margin-block-end: 4px;
 }
+
+#notes {
+    animation: rotation 2s infinite linear;
+    filter: invert(100%) sepia(0%) saturate(4831%) hue-rotate(337deg) brightness(104%) contrast(100%);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate3d(0, 1, 0, 0deg);
+    }
+
+    50% {
+        transform: rotate3d(0, 1, 0, 180deg);
+    }
+
+    100% {
+        transform: rotate3d(0, 1, 0, 360deg);
+    }
+}
