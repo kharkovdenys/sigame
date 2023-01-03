@@ -25,6 +25,7 @@ export class SocketService {
   private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: -1, j: -1 });
   private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
   private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ type: 'default' });
+  private pauseSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private role: 'showman' | 'player' = 'showman';
   public players = this.playersSubject.asObservable();
   public showman = this.showmanSubject.asObservable();
@@ -37,6 +38,7 @@ export class SocketService {
   public position = this.positionSubject.asObservable();
   public typeRound = this.typeRoundSubject.asObservable();
   public atom = this.atomSubject.asObservable();
+  public gamePause = this.pauseSubject.asObservable();
   public gameId?: string;
   public packInfo?: string;
   public comment: string = '';
@@ -107,6 +109,11 @@ export class SocketService {
       this.maxPlayersSubject.next(data.maxPlayers);
       this.themesSubject.next(data.themes);
       console.log(data);
+    });
+
+    this.socket.on("pause", (pause: boolean) => {
+      this.pauseSubject.next(pause);
+      console.log(pause);
     });
 
     this.socket.on("show-question", (data: any) => {
@@ -268,6 +275,14 @@ export class SocketService {
     });
   }
 
+  pause() {
+    this.socket.emit("pause", { gameId: this.gameId }, (data: any) => {
+      console.log(data);
+      if (typeof data.status === 'boolean')
+        this.pauseSubject.next(data.status);
+    });
+  }
+
   leave() {
     this.socket.emit("leave-room", this.gameId);
     this.gameId = undefined;
@@ -285,6 +300,7 @@ export class SocketService {
         this.questionsSubject.next(data.questions);
         this.typeRoundSubject.next(data.typeRound);
         this.gameStateSubject.next(data.gameState);
+        this.pauseSubject.next(data.pause);
         this.role = this.socket.ioSocket.id === data.showman.id ? 'showman' : 'player';
         this.gameId = data.gameId;
         this.packInfo = data.packInfo;

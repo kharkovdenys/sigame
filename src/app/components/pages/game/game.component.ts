@@ -48,6 +48,8 @@ export class GameComponent implements OnDestroy {
   playerName?: string;
   atom?: Atom;
   atomSub?: Subscription;
+  gamePause = false;
+  pauseSub?: Subscription;
   dialogRefAnswer?: MatDialogRef<DialogAnswer, any>
 
   constructor(
@@ -61,6 +63,16 @@ export class GameComponent implements OnDestroy {
     this.maxPlayersSub = this.socketService.maxPlayers.subscribe(maxPlayers => this.maxPlayers = maxPlayers);
     this.chooserSub = this.socketService.chooser.subscribe(chooser => this.chooser = chooser);
     this.atomSub = this.socketService.atom.subscribe(atom => this.atom = atom);
+    this.pauseSub = this.socketService.gamePause.subscribe(pause => {
+      this.gamePause = pause;
+      if (pause) {
+        this.intervalSub?.unsubscribe();
+      } else {
+        if (this.gameState === 'choose-player-start' || this.gameState === 'choose-questions' || this.gameState === 'choose-theme' || this.gameState === 'rates' || this.gameState === 'answering') {
+          this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
+        }
+      }
+    })
     this.gameStateSub = this.socketService.gameState.subscribe(gameState => {
       this.gameState = gameState;
       switch (gameState) {
@@ -148,6 +160,10 @@ export class GameComponent implements OnDestroy {
     this.socketService.skip();
   }
 
+  pause() {
+    this.socketService.pause();
+  }
+
   clickForAnswer() {
     if (this.gameState !== 'answer')
       this.socketService.clickForAnswer();
@@ -166,6 +182,7 @@ export class GameComponent implements OnDestroy {
     this.positionSub?.unsubscribe();
     this.typeRoundSub?.unsubscribe();
     this.atomSub?.unsubscribe();
+    this.pauseSub?.unsubscribe();
   }
 
 }
