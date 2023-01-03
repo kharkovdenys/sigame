@@ -1,12 +1,12 @@
 <div *ngFor="let item of [].constructor(maxPlayers);let i = index" [style.width.%]="100/(maxPlayers!+2)" class="center">
     <mat-card id="card" class="center" (click)="players.length>i?choosePlayer(players[i].name):undefined"
         [style.background-color]="players.length<=i || players[i].id === undefined || players[i].state==='Not a finalist' ? '#CDCDCD':'#fff'">
-        <mat-card-title>
+        <mat-card-title style="text-align: center;">
             {{players.length>i?players[i].name:'⠀'}}
         </mat-card-title>
         <div id="card-img">
             <img mat-card-image
-                src="https://avatars.dicebear.com/api/{{players.length>i?'avataaars':'bottts'}}/{{players.length>i?players[i].name:'sigame'}}.svg"
+                src="https://avatars.dicebear.com/api/{{players.length>i?'avataaars':'bottts'}}/{{players.length>i?players[i].name.replace('?',''):'sigame'}}.svg"
                 style="max-width: 100%;
                         max-height: 100%;
                         display: block;">
