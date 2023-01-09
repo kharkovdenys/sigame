@@ -3,12 +3,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import DialogDataScore from 'src/app/interfaces/DialogDataScore';
 
 @Component({
-  selector: 'dialog-score',
+  selector: 'app-dialog-score',
   templateUrl: './dialog.component.html'
 })
-export class DialogScore {
+export class DialogScoreComponent {
   constructor(
-    public dialogRef: MatDialogRef<DialogScore>,
+    public dialogRef: MatDialogRef<DialogScoreComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataScore,
   ) { }
 

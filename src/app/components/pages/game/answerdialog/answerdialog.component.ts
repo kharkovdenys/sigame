@@ -4,12 +4,12 @@ import DialogDataAnswer from 'src/app/interfaces/DialogDataAnswer';
 
 
 @Component({
-  selector: 'dialog-answer',
+  selector: 'app-dialog-answer',
   templateUrl: './answerdialog.component.html'
 })
-export class DialogAnswer {
+export class DialogAnswerComponent {
   constructor(
-    public dialogRef: MatDialogRef<DialogAnswer>,
+    public dialogRef: MatDialogRef<DialogAnswerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataAnswer,
   ) { }
 

@@ -1,5 +1,5 @@
 import { animate, keyframes, query, style, transition, trigger, stagger } from '@angular/animations';
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import Atom from 'src/app/interfaces/Atom';
 import Position from 'src/app/interfaces/Position';
 import Question from 'src/app/interfaces/Question';
@@ -75,12 +75,12 @@ import { environment } from 'src/environments/environment';
     ])
   ]
 })
-export class ScreenComponent {
+export class ScreenComponent implements OnChanges {
   constructor(
     private socketService: SocketService
   ) { }
   @Input() gameState!: string;
-  expectation: string = 'Waiting for the start';
+  expectation = 'Waiting for the start';
   @Input() themes!: Theme[];
   @Input() roundName?: string;
   @Input() chooser?: string;
@@ -94,12 +94,12 @@ export class ScreenComponent {
   apiUrl = environment.apiUrl;
 
   columns(max: number): string[] {
-    var input = ['name'];
-    for (var i = 0; i < max; i += 1) {
+    const input = ['name'];
+    for (let i = 0; i < max; i += 1) {
       input.push(i.toString());
     }
     return input;
-  };
+  }
 
   maxColumns(): number {
     let i = 0;

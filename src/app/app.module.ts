@@ -20,14 +20,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/pages/home/home.component';
 import config from './services/socket.config';
 import { GameComponent } from './components/pages/game/game.component';
-import { DialogName } from './components/pages/home/dialog/dialog-name.component';
+import { DialogNameComponent } from './components/pages/home/dialog/dialog-name.component';
 import { PlayersComponent } from './components/pages/game/players/players.component';
-import { DialogJoin } from './components/pages/games/dialog/dialog.component';
+import { DialogJoinComponent } from './components/pages/games/dialog/dialog.component';
 import { ScreenComponent } from './components/pages/game/screen/screen.component';
 import { CdkTableModule } from '@angular/cdk/table';
-import { DialogScore } from './components/pages/game/players/dialog/dialog.component';
-import { DialogRates } from './components/pages/game/ratesdialog/ratesdialog.component';
-import { DialogAnswer } from './components/pages/game/answerdialog/answerdialog.component';
+import { DialogScoreComponent } from './components/pages/game/players/dialog/dialog.component';
+import { DialogRatesComponent } from './components/pages/game/ratesdialog/ratesdialog.component';
+import { DialogAnswerComponent } from './components/pages/game/answerdialog/answerdialog.component';
 
 @NgModule({
   declarations: [
@@ -36,13 +36,13 @@ import { DialogAnswer } from './components/pages/game/answerdialog/answerdialog.
     NewgameComponent,
     HomeComponent,
     GameComponent,
-    DialogName,
+    DialogNameComponent,
     PlayersComponent,
-    DialogJoin,
+    DialogJoinComponent,
     ScreenComponent,
-    DialogScore,
-    DialogRates,
-    DialogAnswer
+    DialogScoreComponent,
+    DialogRatesComponent,
+    DialogAnswerComponent
   ],
   imports: [
     BrowserModule,

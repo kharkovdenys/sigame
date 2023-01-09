@@ -3,12 +3,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import DialogDataName from 'src/app/interfaces/DialogDataName';
 
 @Component({
-  selector: 'dialog-join',
+  selector: 'app-dialog-join',
   templateUrl: './dialog.component.html'
 })
-export class DialogJoin {
+export class DialogJoinComponent {
   constructor(
-    public dialogRef: MatDialogRef<DialogJoin>,
+    public dialogRef: MatDialogRef<DialogJoinComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataName,
   ) { }
 

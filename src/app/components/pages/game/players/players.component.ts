@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import Player from 'src/app/interfaces/Player';
 import { SocketService } from 'src/app/services/socket.service';
-import { DialogScore } from './dialog/dialog.component';
+import { DialogScoreComponent } from './dialog/dialog.component';
 
 @Component({
   selector: 'app-players',
@@ -40,7 +40,7 @@ export class PlayersComponent {
   }
 
   changeScore(playerName: string, score: number) {
-    const dialogRef = this.dialog.open(DialogScore, {
+    const dialogRef = this.dialog.open(DialogScoreComponent, {
       data: { playerName, score },
     });
 

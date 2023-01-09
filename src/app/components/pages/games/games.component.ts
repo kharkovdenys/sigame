@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import Game from 'src/app/interfaces/Game';
 import { SocketService } from 'src/app/services/socket.service';
-import { DialogJoin } from './dialog/dialog.component';
+import { DialogJoinComponent } from './dialog/dialog.component';
 
 @Component({
   selector: 'app-games',
@@ -23,7 +23,7 @@ export class GamesComponent implements OnInit {
   }
 
   openDialog(gameId: string): void {
-    const dialogRef = this.dialog.open(DialogJoin, {
+    const dialogRef = this.dialog.open(DialogJoinComponent, {
       data: { name: this.name },
     });
 

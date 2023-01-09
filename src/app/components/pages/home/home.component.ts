@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { DialogName } from './dialog/dialog-name.component';
+import { DialogNameComponent } from './dialog/dialog-name.component';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ export class HomeComponent {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogName, {
+    const dialogRef = this.dialog.open(DialogNameComponent, {
       data: { name: this.name },
     });
 

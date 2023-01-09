@@ -9,8 +9,8 @@ import Question from 'src/app/interfaces/Question';
 import Showman from 'src/app/interfaces/Showman';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
-import { DialogAnswer } from './answerdialog/answerdialog.component';
-import { DialogRates } from './ratesdialog/ratesdialog.component';
+import { DialogAnswerComponent } from './answerdialog/answerdialog.component';
+import { DialogRatesComponent } from './ratesdialog/ratesdialog.component';
 
 @Component({
   selector: 'app-game',
@@ -50,7 +50,7 @@ export class GameComponent implements OnDestroy {
   atomSub?: Subscription;
   gamePause = false;
   pauseSub?: Subscription;
-  dialogRefAnswer?: MatDialogRef<DialogAnswer, any>
+  dialogRefAnswer?: MatDialogRef<DialogAnswerComponent, boolean | undefined>
 
   constructor(
     private router: Router,
@@ -118,7 +118,7 @@ export class GameComponent implements OnDestroy {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogRates, {
+    const dialogRef = this.dialog.open(DialogRatesComponent, {
       disableClose: true,
       data: { score: 1, maxScore: this.players.filter(p => p.id === this.socketService.getId())[0].score },
     });
@@ -132,7 +132,7 @@ export class GameComponent implements OnDestroy {
   }
 
   openAnswerDialog(): void {
-    this.dialogRefAnswer = this.dialog.open(DialogAnswer, {
+    this.dialogRefAnswer = this.dialog.open(DialogAnswerComponent, {
       disableClose: true,
       data: { answer: this.socketService.answer },
     });

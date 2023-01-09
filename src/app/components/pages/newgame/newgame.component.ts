@@ -10,8 +10,8 @@ import { SocketService } from 'src/app/services/socket.service';
 })
 export class NewgameComponent implements OnInit {
   fileControl: FormControl;
-  file: any;
-  maxSize: number = 100;
+  file?: File;
+  maxSize = 100;
 
   constructor(
     private socketService: SocketService
@@ -24,7 +24,7 @@ export class NewgameComponent implements OnInit {
   name = "";
   maxPlayers = 5;
   ngOnInit() {
-    this.fileControl.valueChanges.subscribe((file: any) => {
+    this.fileControl.valueChanges.subscribe((file?: File) => {
       if (file && this.fileControl.valid) {
         this.file = file;
         this.socketService.upload(this.file);

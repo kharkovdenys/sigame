@@ -4,12 +4,12 @@ import DialogDataRates from 'src/app/interfaces/DialogDataRates';
 
 
 @Component({
-  selector: 'dialog-rates',
+  selector: 'app-dialog-rates',
   templateUrl: './ratesdialog.component.html'
 })
-export class DialogRates {
+export class DialogRatesComponent {
   constructor(
-    public dialogRef: MatDialogRef<DialogRates>,
+    public dialogRef: MatDialogRef<DialogRatesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogDataRates,
   ) { }
 }
