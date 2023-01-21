@@ -1,5 +1,5 @@
 <div id="screen" [ngSwitch]="gameState">
-    <div [@loading]="{value:gameState,params:{time:timing()}}"
+    <div #loading
         style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;"></div>
     <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
     <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
@@ -13,7 +13,7 @@
         <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''" [@read]>
             <p class="line" *ngFor="let line of (atom?.text??'').split('\n')">
                 <span class="word" *ngFor="let word of line.split(' ')">
-                    <span class="letter" *ngFor="let letter of word.split('/([\uD800-\uDBFF][\uDC00-\uDFFF])/')">
+                    <span class="letter" *ngFor="let letter of split(word)">
                         {{letter}}
                     </span>
                 </span>

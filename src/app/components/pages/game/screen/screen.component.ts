@@ -1,5 +1,5 @@
-import { animate, keyframes, query, style, transition, trigger, stagger } from '@angular/animations';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { animate, keyframes, query, style, transition, trigger, stagger, AnimationBuilder, AnimationPlayer } from '@angular/animations';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import Atom from 'src/app/interfaces/Atom';
 import Position from 'src/app/interfaces/Position';
 import Question from 'src/app/interfaces/Question';
@@ -30,31 +30,6 @@ import { environment } from 'src/environments/environment';
       ]
       )
     ]),
-    trigger('loading', [
-      transition(
-        '* => can-answer', [
-        style({ 'border': '4px', 'border-color': 'white', 'border-style': 'solid' }),
-        animate('{{time}}s', keyframes([
-          style(
-            {
-              'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px), 4px 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0
-            }),
-          style(
-            {
-              'clip-path': 'polygon(0 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0.25
-            }),
-          style({
-            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, 100% 0%, 0% 0%)', offset: 0.5
-          }),
-          style({
-            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%)', offset: 0.75
-          }),
-          style({
-            'clip-path': 'polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%)', offset: 1
-          }),
-        ]))]
-      )
-    ]),
     trigger('read', [
       transition(
         ':enter',
@@ -77,7 +52,8 @@ import { environment } from 'src/environments/environment';
 })
 export class ScreenComponent implements OnChanges {
   constructor(
-    private socketService: SocketService
+    private socketService: SocketService,
+    private _builder: AnimationBuilder
   ) { }
   @Input() gameState!: string;
   expectation = 'Waiting for the start';
@@ -91,7 +67,31 @@ export class ScreenComponent implements OnChanges {
   @Input() typeRound?: 'final' | 'default';
   @Input() atom?: Atom;
   @Input() gameId?: string;
+  @Input() pause?: boolean;
+  @ViewChild('loading') loading?: ElementRef;
   apiUrl = environment.apiUrl;
+  playerLoading?: AnimationPlayer;
+  loadingAnimation = this._builder.build([
+    style({ 'border': '4px', 'border-color': 'white', 'border-style': 'solid' }),
+    animate('{{time}}s', keyframes([
+      style(
+        {
+          'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px), 4px 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0
+        }),
+      style(
+        {
+          'clip-path': 'polygon(0 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 100% 100%, 100% 0%, 0% 0%)', offset: 0.25
+        }),
+      style({
+        'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 4px, 100% 0%, 0% 0%)', offset: 0.5
+      }),
+      style({
+        'clip-path': 'polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%)', offset: 0.75
+      }),
+      style({
+        'clip-path': 'polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%)', offset: 1
+      }),
+    ]))]);
 
   columns(max: number): string[] {
     const input = ['name'];
@@ -117,6 +117,10 @@ export class ScreenComponent implements OnChanges {
 
   sendChooseTheme(i: number) {
     this.socketService.sendChooseTheme(i);
+  }
+
+  split(word: string): string[] {
+    return [...word];
   }
 
   getThemes() {
@@ -148,6 +152,16 @@ export class ScreenComponent implements OnChanges {
       }
       changeRoundThemesText();
       const roundThemes = setInterval(() => changeRoundThemesText(), 2000);
+    } else if (changes['gameState'] && changes['gameState'].currentValue === 'can-answer') {
+      this.playerLoading = this.loadingAnimation.create(this.loading?.nativeElement, { params: { time: this.timing() } });
+      this.playerLoading.play();
+    }
+    if (changes['gameState'] && changes['gameState'].currentValue !== 'can-answer') {
+      this.playerLoading?.destroy();
+      this.playerLoading = undefined;
+    }
+    if (changes['pause']) {
+      changes['pause'].currentValue ? this.playerLoading?.pause() : this.playerLoading?.play();
     }
   }
 }
