@@ -13,7 +13,7 @@
         <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''" [@read]>
             <p class="line" *ngFor="let line of (atom?.text??'').split('\n')">
                 <span class="word" *ngFor="let word of line.split(' ')">
-                    <span class="letter" *ngFor="let letter of word.split('')">
+                    <span class="letter" *ngFor="let letter of word.split('/([\uD800-\uDBFF][\uDC00-\uDFFF])/')">
                         {{letter}}
                     </span>
                 </span>
