@@ -6,6 +6,6 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onCancelClick()">Cancel</button>
     <button mat-button [mat-dialog-close]="data.name" [disabled]="data.name!==''?false:true">Save</button>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
 </div>
