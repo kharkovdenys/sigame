@@ -58,3 +58,7 @@ button.mat-focus-indicator.button-browse.mat-icon-button.mat-button-base.mat-pri
     vertical-align: baseline;
     background: rgba(0, 0, 0, 0);
 }
+
+.mat-mdc-dialog-actions{
+    justify-content: end !important;
+}
