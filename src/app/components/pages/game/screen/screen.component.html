@@ -10,14 +10,16 @@
     </div>
     <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering'?gameState:''"
         id="show-question" class="center" [ngSwitch]="atom?.type">
-        <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''" [@read]>
-            <p class="line" *ngFor="let line of (atom?.text??'').split('\n')">
-                <span class="word" *ngFor="let word of line.split(' ')">
-                    <span class="letter" *ngFor="let letter of split(word)">
-                        {{letter}}
+        <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''">
+            <div *ngFor="let text of [atom?.text]" [@read]="text">
+                <p class="line" *ngFor="let line of (text??'').split('\n')">
+                    <span class="word" *ngFor="let word of line.split(' ')">
+                        <span class="letter" *ngFor="let letter of split(word)">
+                            {{letter}}
+                        </span>
                     </span>
-                </span>
-            </p>
+                </p>
+            </div>
         </div>
         <img *ngSwitchCase="'image'" src="{{apiUrl}}/image/{{gameId}}?{{atom?.text}}" style="
         max-width: 100%;
