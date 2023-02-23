@@ -241,12 +241,6 @@ export class SocketService {
     this.socket.emit("send-answer-result", { gameId: this.gameId, result, chooser: this.chooserSubject.getValue() });
   }
 
-  upload(file: File) {
-    this.socket.emit("upload-pack", file, (data: { status: string }) => {
-      console.log(data);
-    });
-  }
-
   getId(): string {
     return this.socket.ioSocket.id;
   }

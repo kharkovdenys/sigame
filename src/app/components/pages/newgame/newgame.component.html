@@ -1,12 +1,14 @@
 <div class="center" style="margin-top: 15px;">
-    <mat-form-field>
-        <mat-label>Game name: </mat-label>
-        <input matInput [(ngModel)]="name" />
-    </mat-form-field>
-    <mat-form-field>
-        <ngx-mat-file-input [formControl]="fileControl" placeholder="Question pack" accept=".siq">
-        </ngx-mat-file-input>
-    </mat-form-field>
+    <div style="display: grid;margin-bottom: 12px;">
+        <mat-form-field>
+            <mat-label>Game name: </mat-label>
+            <input matInput [(ngModel)]="name" />
+        </mat-form-field>
+        <mat-form-field>
+            <ngx-mat-file-input [formControl]="fileControl" placeholder="Question pack" accept=".siq" />
+        </mat-form-field>
+        <mat-progress-bar mode="determinate" value="{{percentCompleted}}"></mat-progress-bar>
+    </div>
     <mat-label>Max player: </mat-label>
     <mat-slider min="2" max="8">
         <input [(ngModel)]="maxPlayers" matSliderThumb>
