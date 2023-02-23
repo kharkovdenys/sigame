@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+
 import { DialogNameComponent } from './dialog/dialog-name.component';
 
 @Component({

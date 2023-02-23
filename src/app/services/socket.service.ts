@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
+
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+
 import Atom from '../interfaces/Atom';
 import Game from '../interfaces/Game';
 import Player from '../interfaces/Player';

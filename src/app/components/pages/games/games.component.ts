@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import Game from 'src/app/interfaces/Game';
 import { SocketService } from 'src/app/services/socket.service';
+
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
 import { DialogJoinComponent } from './dialog/dialog.component';
 
 @Component({

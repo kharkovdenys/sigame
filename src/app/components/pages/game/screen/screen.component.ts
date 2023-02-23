@@ -1,11 +1,15 @@
-import { animate, keyframes, query, style, transition, trigger, stagger, AnimationBuilder, AnimationPlayer } from '@angular/animations';
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import Atom from 'src/app/interfaces/Atom';
 import Position from 'src/app/interfaces/Position';
 import Question from 'src/app/interfaces/Question';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
 import { environment } from 'src/environments/environment';
+
+import {
+  animate, AnimationBuilder, AnimationPlayer, keyframes, query, stagger, style, transition,
+  trigger
+} from '@angular/animations';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-screen',

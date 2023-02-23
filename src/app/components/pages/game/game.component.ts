@@ -1,6 +1,3 @@
-import { Component, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import Atom from 'src/app/interfaces/Atom';
 import Player from 'src/app/interfaces/Player';
@@ -9,6 +6,11 @@ import Question from 'src/app/interfaces/Question';
 import Showman from 'src/app/interfaces/Showman';
 import Theme from 'src/app/interfaces/Theme';
 import { SocketService } from 'src/app/services/socket.service';
+
+import { Component, OnDestroy } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+
 import { DialogAnswerComponent } from './answerdialog/answerdialog.component';
 import { DialogRatesComponent } from './ratesdialog/ratesdialog.component';
 

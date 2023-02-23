@@ -1,6 +1,6 @@
 <div id="screen" [ngSwitch]="gameState">
-    <div #loading
-        style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;"></div>
+    <div #loading style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;">
+    </div>
     <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
     <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
         {{getThemes()}}

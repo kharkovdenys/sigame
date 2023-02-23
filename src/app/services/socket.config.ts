@@ -1,5 +1,5 @@
-import { SocketIoConfig } from "ngx-socket-io";
-import { environment } from "src/environments/environment";
+import { SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 const config: SocketIoConfig = {
     url: environment.socketUrl,
