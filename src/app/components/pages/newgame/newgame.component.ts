@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-newgame',
@@ -14,19 +15,18 @@ export class NewgameComponent implements OnInit {
   fileControl: FormControl;
   file?: File;
   maxSize = 150;
+  percentCompleted = 0;
+  name = "";
+  maxPlayers = 5;
+  apiUrl = environment.apiUrl;
 
-  constructor(
-    private socketService: SocketService
-  ) {
+  constructor(private socketService: SocketService, private snackBar: MatSnackBar) {
     this.fileControl = new FormControl(this.file, [
       Validators.required,
       MaxSizeValidator(this.maxSize * 1048576)
     ]);
   }
-  percentCompleted = 0;
-  name = "";
-  maxPlayers = 5;
-  apiUrl = environment.apiUrl;
+
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((file?: File) => {
       if (file && this.fileControl.valid) {
@@ -43,12 +43,12 @@ export class NewgameComponent implements OnInit {
               this.percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           }
         })
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
+            this.snackBar.open('File uploaded successfully', 'Close', { duration: 3000 });
           })
-          .catch((error) => {
+          .catch(() => {
             this.percentCompleted = 0;
-            console.log(error);
+            this.snackBar.open('An error occurred while uploading the file', 'Close', { duration: 3000 });
           });
       }
     })

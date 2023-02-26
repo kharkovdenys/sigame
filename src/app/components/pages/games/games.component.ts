@@ -13,7 +13,7 @@ import { DialogJoinComponent } from './dialog/dialog.component';
   styleUrls: ['./games.component.css']
 })
 export class GamesComponent implements OnInit, OnDestroy {
-  name = '';
+  name = localStorage.getItem('name') ?? '';
   games: Game[] = [];
   deletedGameSubscription!: Subscription;
   newGameSubscription!: Subscription;
@@ -22,23 +22,19 @@ export class GamesComponent implements OnInit, OnDestroy {
     private socketService: SocketService) { }
 
   ngOnInit(): void {
-    this.name = localStorage.getItem('name') ?? '';
     this.socketService.getGames(this.games);
     this.deletedGameSubscription = this.socketService.onDeletedGame().subscribe((gameId) => this.games = this.games.filter(g => g.id !== gameId));
     this.newGameSubscription = this.socketService.onNewGame().subscribe((game) => this.games.push(game as Game));
   }
 
   openDialog(gameId: string): void {
-    const dialogRef = this.dialog.open(DialogJoinComponent, {
-      data: { name: this.name },
-    });
+    const dialogRef = this.dialog.open(DialogJoinComponent, { data: { name: this.name } });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined && result.name !== '') {
-        localStorage.setItem('name', result.name);
-        this.name = result.name;
-        this.socketService.join(gameId, result.type);
-      }
+      if (!result) return;
+      localStorage.setItem('name', result.name);
+      this.name = result.name;
+      this.socketService.join(gameId, result.type);
     });
   }
 

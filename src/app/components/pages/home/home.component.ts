@@ -10,24 +10,18 @@ import { DialogNameComponent } from './dialog/dialog-name.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  name: string;
+  name = localStorage.getItem('name') ?? '';
 
-  constructor(public dialog: MatDialog, private router: Router) {
-    this.name = localStorage.getItem('name') ?? '';
-  }
+  constructor(public dialog: MatDialog, private router: Router) { }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogNameComponent, {
-      data: { name: this.name },
-    });
+    const dialogRef = this.dialog.open(DialogNameComponent, { data: { name: this.name } });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (result !== undefined && result !== '') {
-        localStorage.setItem('name', result);
-        this.name = result;
-        this.router.navigate(['/newgame']);
-      }
+      if (!result) return;
+      localStorage.setItem('name', result);
+      this.name = result;
+      this.router.navigate(['/newgame']);
     });
   }
 }
