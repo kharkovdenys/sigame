@@ -126,7 +126,6 @@ export class GameComponent implements OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       if (result !== undefined && result > 0) {
         this.socketService.sendRate(result);
       }
@@ -140,7 +139,6 @@ export class GameComponent implements OnDestroy {
     });
 
     this.dialogRefAnswer.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       this.socketService.sendAnswerResult(result ?? false);
     });
   }

@@ -26,31 +26,20 @@ export class PlayersComponent {
 
   choosePlayer(playerName: string) {
     if (this.gameState === 'choose-player-start' && this.role === 'showman') {
-      let min = this.players[0].score;
-      for (let i = 1; i < this.players.length; i++) {
-        if (min > this.players[i].score) {
-          min = this.players[i].score;
-        }
-      }
-      for (const player of this.players) {
-        if (player.name === playerName && player.score === min) {
-          this.socketService.choosePlayer(playerName);
-          return;
-        }
-      }
+      const minScore = this.players.reduce((min, player) => {
+        return player.score < min ? player.score : min;
+      }, this.players[0].score);
+      const index = this.players.findIndex(p => p.name === playerName && p.score === minScore);
+      if (index !== -1) this.socketService.choosePlayer(playerName);
     }
   }
 
   changeScore(playerName: string, score: number) {
-    const dialogRef = this.dialog.open(DialogScoreComponent, {
-      data: { playerName, score },
-    });
+    const dialogRef = this.dialog.open(DialogScoreComponent, { data: { playerName, score } });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (result !== undefined && Number.isInteger(result.score)) {
+      if (result !== undefined && Number.isInteger(result.score))
         this.socketService.changeScore(result.playerName, result.score);
-      }
     });
   }
 

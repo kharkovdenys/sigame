@@ -226,9 +226,8 @@ export class SocketService {
   }
 
   choosePlayer(playerName: string) {
-    if (this.showmanSubject.getValue().id === this.socket.ioSocket.id) {
+    if (this.showmanSubject.getValue().id === this.socket.ioSocket.id)
       this.socket.emit("choose-player", { playerName, gameId: this.gameId });
-    }
   }
 
   sendChooseQuestion(i: number, j: number) {
