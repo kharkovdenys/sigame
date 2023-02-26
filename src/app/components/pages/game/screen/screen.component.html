@@ -1,6 +1,7 @@
 <div id="screen" [ngSwitch]="gameState">
     <div #loading style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;">
     </div>
+    <img *ngSwitchCase="'without-finale'" class="center" id="wreath" src="/assets/laurel-wreath.svg">
     <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
     <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
         {{getThemes()}}
@@ -21,24 +22,14 @@
                 </p>
             </div>
         </div>
-        <img *ngSwitchCase="'image'" src="{{apiUrl}}/image/{{gameId}}?{{atom?.text}}" style="
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-    ">
+        <img *ngSwitchCase="'image'" src="{{apiUrl}}/image/{{gameId}}?{{atom?.text}}"
+            style="max-width: 100%;max-height: 100%;display: block;">
         <audio *ngSwitchCase="'voice'" autoplay>
             <source src="{{apiUrl}}/audio/{{gameId}}?{{atom?.text}}" type="audio/mpeg">
         </audio>
-        <img *ngSwitchCase="'voice'" src="/assets/musical-notes.svg" style="
-        max-width: 60%;
-        max-height: 100%;
-        display: block;
-    " id="notes">
-        <video *ngSwitchCase="'video'" autoplay style="
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-    ">
+        <img *ngSwitchCase="'voice'" src="/assets/musical-notes.svg"
+            style="max-width: 60%;max-height: 100%;display: block;" id="notes">
+        <video *ngSwitchCase="'video'" autoplay style="max-width: 100%;max-height: 100%;display: block;">
             <source src="{{apiUrl}}/video/{{gameId}}?{{atom?.text}}" type="video/mp4">
         </video>
     </div>

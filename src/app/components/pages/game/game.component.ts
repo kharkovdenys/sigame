@@ -91,6 +91,7 @@ export class GameComponent implements OnDestroy {
         case 'question-i-j': { this.comment = 'The question will be ' + this.questions[this.position.j].name + ' ' + this.questions[this.position.j].prices[this.position.i]; break; }
         case 'theme-i': { this.comment = 'The theme will not be ' + this.questions[this.position.i].name; break; }
         case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
+        case 'without-finale': { this.comment = 'No one made it to the finals'; break; }
       }
       this.intervalSub?.unsubscribe();
       if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering') {

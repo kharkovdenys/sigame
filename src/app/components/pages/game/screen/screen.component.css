@@ -109,6 +109,14 @@ table tr td:last-child {
     filter: invert(100%) sepia(0%) saturate(4831%) hue-rotate(337deg) brightness(104%) contrast(100%);
 }
 
+#wreath {
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 100%;
+    display: block;
+    filter: invert(100%) sepia(0%) saturate(4831%) hue-rotate(337deg) brightness(104%) contrast(100%);
+}
+
 @keyframes rotation {
     0% {
         transform: rotate3d(0, 1, 0, 0deg);

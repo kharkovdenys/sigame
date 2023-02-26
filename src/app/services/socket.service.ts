@@ -171,6 +171,10 @@ export class SocketService {
       this.questionsSubject.next(data.questions);
     });
 
+    this.socket.on("without-finale", () => {
+      this.gameStateSubject.next('without-finale');
+    });
+
     this.socket.on("questions-final", (data: { questions: Question[], players: Player[] }) => {
       this.questionsSubject.next(data.questions);
       this.playersSubject.next(data.players);
