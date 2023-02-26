@@ -213,6 +213,14 @@ export class SocketService {
     });
   }
 
+  onNewGame() {
+    return this.socket.fromEvent('new-game');
+  }
+
+  onDeletedGame() {
+    return this.socket.fromEvent('deleted-game');
+  }
+
   getGames(games: Game[]) {
     this.socket.emit("get-game-list", (gameList: Game[]) => games.push(...gameList));
   }
@@ -272,10 +280,8 @@ export class SocketService {
   }
 
   pause() {
-    this.socket.emit("pause", { gameId: this.gameId }, (data: { status: boolean | string }) => {
+    this.socket.emit("pause", { gameId: this.gameId }, (data: { status: string }) => {
       console.log(data);
-      if (typeof data.status === 'boolean')
-        this.pauseSubject.next(data.status);
     });
   }
 

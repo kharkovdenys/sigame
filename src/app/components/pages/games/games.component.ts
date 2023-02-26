@@ -1,7 +1,8 @@
+import { Subscription } from 'rxjs';
 import Game from 'src/app/interfaces/Game';
 import { SocketService } from 'src/app/services/socket.service';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogJoinComponent } from './dialog/dialog.component';
@@ -11,17 +12,20 @@ import { DialogJoinComponent } from './dialog/dialog.component';
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.css']
 })
-export class GamesComponent implements OnInit {
-  name: string;
-
-  constructor(public dialog: MatDialog,
-    private socketService: SocketService) {
-    this.name = localStorage.getItem('name') ?? '';
-  }
+export class GamesComponent implements OnInit, OnDestroy {
+  name = '';
   games: Game[] = [];
+  deletedGameSubscription!: Subscription;
+  newGameSubscription!: Subscription;
+
+  constructor(private dialog: MatDialog,
+    private socketService: SocketService) { }
 
   ngOnInit(): void {
+    this.name = localStorage.getItem('name') ?? '';
     this.socketService.getGames(this.games);
+    this.deletedGameSubscription = this.socketService.onDeletedGame().subscribe((gameId) => this.games = this.games.filter(g => g.id !== gameId));
+    this.newGameSubscription = this.socketService.onNewGame().subscribe((game) => this.games.push(game as Game));
   }
 
   openDialog(gameId: string): void {
@@ -30,12 +34,16 @@ export class GamesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       if (result !== undefined && result.name !== '') {
         localStorage.setItem('name', result.name);
         this.name = result.name;
         this.socketService.join(gameId, result.type);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.newGameSubscription?.unsubscribe();
+    this.deletedGameSubscription?.unsubscribe();
   }
 }
