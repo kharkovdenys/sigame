@@ -175,6 +175,10 @@ export class SocketService {
       this.gameStateSubject.next('without-finale');
     });
 
+    this.socket.on("answering-final", () => {
+      this.gameStateSubject.next('answering-final');
+    });
+
     this.socket.on("questions-final", (data: { questions: Question[], players: Player[] }) => {
       this.questionsSubject.next(data.questions);
       this.playersSubject.next(data.players);
@@ -228,6 +232,10 @@ export class SocketService {
 
   sendRate(score: number) {
     this.socket.emit("send-rate", { score, gameId: this.gameId });
+  }
+
+  sendAnswer(answer: string) {
+    this.socket.emit("send-answer", { answer, gameId: this.gameId });
   }
 
   clickForAnswer() {

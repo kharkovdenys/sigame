@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Enter your answer</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Answer</mat-label>
+        <input matInput [(ngModel)]="data.answer" required="true" type="text">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="data.answer" [disabled]="data.answer!==''?false:true">Send</button>
+</div>

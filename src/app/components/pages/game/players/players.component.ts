@@ -35,7 +35,7 @@ export class PlayersComponent {
   }
 
   changeScore(playerName: string, score: number) {
-    const dialogRef = this.dialog.open(DialogScoreComponent, { data: { playerName, score } });
+    const dialogRef = this.dialog.open(DialogScoreComponent, { data: { playerName, score }, position: { bottom: "10%" } });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && Number.isInteger(result.score))

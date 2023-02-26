@@ -26,8 +26,8 @@
             </mat-card>
         </div>
         <div id="right-part">
-            <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}" *ngIf="gameState==='rates'"
-                style="display: flex;">
+            <mat-progress-bar mode="determinate" value="{{100/secondsMax*seconds}}"
+                *ngIf="gameState==='rates'||gameState==='answering-final'" style="display: flex;">
             </mat-progress-bar>
             <app-screen [gameState]="gameState" [themes]="themes" [roundName]="roundName" [questions]="questions"
                 [chooser]="chooser" [playerName]="playerName" [position]="position" [typeRound]="typeRound"

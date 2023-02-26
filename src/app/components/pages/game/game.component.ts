@@ -12,6 +12,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { DialogAnswerComponent } from './answerdialog/answerdialog.component';
+import { DialogAnsweringComponent } from './answeringdialog/answeringdialog.component';
 import { DialogRatesComponent } from './ratesdialog/ratesdialog.component';
 
 @Component({
@@ -92,15 +93,19 @@ export class GameComponent implements OnDestroy {
         case 'theme-i': { this.comment = 'The theme will not be ' + this.questions[this.position.i].name; break; }
         case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
         case 'without-finale': { this.comment = 'No one made it to the finals'; break; }
+        case 'answering-final': { this.comment = 'Here is the final question'; this.secondsMax = 60; break; }
       }
       this.intervalSub?.unsubscribe();
-      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering') {
+      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering' || gameState === 'answering-final') {
         this.seconds = this.secondsMax;
         this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
       }
       this.role !== 'showman' ? this.dialog.closeAll() : undefined;
       if (gameState === 'rates' && this.role === 'player' && this.players.filter(p => p.id === this.socketService.getId())[0].state !== 'Not a finalist') {
-        this.openDialog();
+        this.openRatesDialog();
+      }
+      if (gameState === 'answering-final' && this.role === 'player' && this.players.filter(p => p.id === this.socketService.getId())[0].state !== 'Not a finalist') {
+        this.openAnsweringDialog();
       }
       this.dialogRefAnswer?.close();
       if (gameState === 'answering' && this.role === 'showman') {
@@ -120,7 +125,7 @@ export class GameComponent implements OnDestroy {
       this.playerName = player[0].name;
   }
 
-  openDialog(): void {
+  openRatesDialog(): void {
     const dialogRef = this.dialog.open(DialogRatesComponent, {
       disableClose: true,
       data: { score: 1, maxScore: this.players.filter(p => p.id === this.socketService.getId())[0].score },
@@ -133,10 +138,22 @@ export class GameComponent implements OnDestroy {
     });
   }
 
+  openAnsweringDialog(): void {
+    const dialogRef = this.dialog.open(DialogAnsweringComponent, {
+      disableClose: true,
+      data: { answer: '' }, position: { bottom: "10%" }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.socketService.sendAnswer(result);
+    });
+  }
+
   openAnswerDialog(): void {
     this.dialogRefAnswer = this.dialog.open(DialogAnswerComponent, {
       disableClose: true,
-      data: { answer: this.socketService.answer },
+      data: { answer: this.socketService.answer }, position: { bottom: "10%" }
     });
 
     this.dialogRefAnswer.afterClosed().subscribe(result => {
