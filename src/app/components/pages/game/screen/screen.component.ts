@@ -115,7 +115,6 @@ export class ScreenComponent implements OnChanges {
   }
 
   sendChooseQuestion(i: number, j: number): void {
-    console.log(i, j);
     this.socketService.sendChooseQuestion(i, j);
   }
 

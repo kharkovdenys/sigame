@@ -2,6 +2,7 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import Atom from '../interfaces/Atom';
@@ -47,61 +48,60 @@ export class SocketService {
   public timing = 15;
   public answer = '';
 
-  constructor(private socket: Socket, private router: Router) {
+  constructor(private socket: Socket, private router: Router, private snackBar: MatSnackBar) {
 
     this.socket.on("connect", () => {
-      console.log("connect");
+      console.log("connected to the server");
       if (this.gameId)
         this.join(this.gameId, this.role);
     });
 
     this.socket.on("player-joined", (data: { players: Player[], chooser: string }) => {
-      console.log("players", data);
       this.playersSubject.next(data.players);
       this.chooserSubject.next(data.chooser);
     });
 
     this.socket.on('showman-joined', (showman: Showman) => {
-      console.log("showman joined", showman);
       this.showmanSubject.next(showman);
     })
 
     this.socket.on("leave-game", (id: string) => {
-      console.log("leave-game");
       const players = this.playersSubject.getValue();
-      for (const i in players) {
-        if (players[i].id === id) {
-          if (this.gameStateSubject.getValue() !== "waiting-ready")
-            players[i].id = undefined;
-          else
-            players.splice(parseInt(i), 1);
-          break;
+      const index = players.findIndex(p => p.id === id);
+      if (index === -1) {
+        if (this.showmanSubject.getValue().id === id) {
+          this.showmanSubject.next({ id: '', name: '⠀' });
         }
       }
-      this.playersSubject.next(players);
-      if (this.showmanSubject.getValue().id === id) {
-        this.showmanSubject.next({ id: '', name: '⠀' });
+      else {
+        if (this.gameStateSubject.getValue() !== "waiting-ready")
+          players[index].id = undefined;
+        else
+          players.splice(index, 1);
+        this.playersSubject.next(players);
       }
     });
 
     this.socket.on("player-change-ready", (playerId: string) => {
-      console.log("got change ready", playerId);
       const players = this.playersSubject.getValue();
-      players.forEach((player) => {
-        if (player.id === playerId) {
-          player.state = player.state === "Not ready" ? "Ready" : "Not ready";
+      players.some((p) => {
+        if (p.id === playerId) {
+          p.state = p.state === "Not ready" ? "Ready" : "Not ready";
+          return true;
         }
+        return false;
       });
       this.playersSubject.next(players);
     });
 
     this.socket.on("player-change-score", (data: { players: Player[], score: number, playerName: string }) => {
-      console.log(data);
       const players = this.playersSubject.getValue();
-      players.forEach((player) => {
-        if (player.name === data.playerName) {
-          player.score = data.score;
+      players.some((p) => {
+        if (p.name === data.playerName) {
+          p.score = data.score;
+          return true;
         }
+        return false;
       });
       this.playersSubject.next(players);
     });
@@ -110,25 +110,21 @@ export class SocketService {
       this.gameStateSubject.next(data.gameState);
       this.maxPlayersSubject.next(data.maxPlayers);
       this.themesSubject.next(data.themes);
-      console.log(data);
     });
 
     this.socket.on("pause", (pause: boolean) => {
       this.pauseSubject.next(pause);
-      console.log(pause);
     });
 
     this.socket.on("show-question", (data: { atom: Atom, gameState: string }) => {
       this.atomSubject.next(data.atom);
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("answer", (data: { atom: Atom, comment: string, gameState: string }) => {
       this.comment = data.comment;
       this.atomSubject.next(data.atom);
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("show-round-themes", (data: { typeRound: 'final' | 'default', gameState: string, themes: Theme[], roundName: string }) => {
@@ -136,58 +132,48 @@ export class SocketService {
       this.gameStateSubject.next(data.gameState);
       this.themesSubject.next(data.themes);
       this.roundNameSubject.next(data.roundName);
-      console.log(data);
     });
 
     this.socket.on("choose-questions", (data: { chooser: string, gameState: string }) => {
       this.chooserSubject.next(data.chooser);
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("rates", (data: { gameState: string }) => {
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("can-answer", (data: { timing: number, gameState: string }) => {
       this.timing = data.timing;
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("answering", (data: { chooser: string, gameState: string }) => {
       this.chooserSubject.next(data.chooser);
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("correct-answer", (answer: string) => {
       this.answer = answer;
-      console.log(answer);
     });
 
     this.socket.on("choose-theme", (data: { chooser: string, gameState: string }) => {
       this.chooserSubject.next(data.chooser);
       this.gameStateSubject.next(data.gameState);
-      console.log(data);
     });
 
     this.socket.on("choose-player-start", (data: { gameState: string, questions: Question[] }) => {
       this.gameStateSubject.next(data.gameState);
       this.questionsSubject.next(data.questions);
-      console.log(data);
     });
 
     this.socket.on("questions", (data: { questions: Question[] }) => {
       this.questionsSubject.next(data.questions);
-      console.log(data);
     });
 
     this.socket.on("questions-final", (data: { questions: Question[], players: Player[] }) => {
       this.questionsSubject.next(data.questions);
       this.playersSubject.next(data.players);
-      console.log(data);
     });
 
     this.socket.on('question-i-j', (data: { i: number, j: number, gameState: string }) => {
@@ -198,7 +184,6 @@ export class SocketService {
         newQuestions[data.j].prices[data.i] = '';
         this.questionsSubject.next(newQuestions);
       }, 1000);
-      console.log(data);
     });
 
     this.socket.on('theme-i', (data: { i: number, gameState: string }) => {
@@ -209,7 +194,6 @@ export class SocketService {
         newQuestions[data.i].name = '⠀';
         this.questionsSubject.next(newQuestions);
       }, 1000);
-      console.log(data);
     });
   }
 
@@ -226,7 +210,7 @@ export class SocketService {
   }
 
   choosePlayer(playerName: string) {
-    if (this.showmanSubject.getValue().id === this.socket.ioSocket.id)
+    if (this.role === 'showman')
       this.socket.emit("choose-player", { playerName, gameId: this.gameId });
   }
 
@@ -255,32 +239,37 @@ export class SocketService {
   }
 
   changeReady() {
-    this.socket.emit("change-ready", { gameId: this.gameId }, (data: { status: string }) => {
-      console.log(data);
+    this.socket.emit("change-ready", { gameId: this.gameId }, (data: { status: string, message: string }) => {
+      if (data.status !== 'success')
+        this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
   changeScore(playerName: string, score: number) {
-    this.socket.emit("change-score", { gameId: this.gameId, playerName, score }, (data: { status: string }) => {
-      console.log(data);
+    this.socket.emit("change-score", { gameId: this.gameId, playerName, score }, (data: { status: string, message: string }) => {
+      if (data.status !== 'success')
+        this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
   start() {
-    this.socket.emit("start", { gameId: this.gameId }, (data: { status: string }) => {
-      console.log(data);
+    this.socket.emit("start", { gameId: this.gameId }, (data: { status: string, message: string }) => {
+      if (data.status !== 'success')
+        this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
   skip() {
-    this.socket.emit("skip", { gameId: this.gameId }, (data: { status: string }) => {
-      console.log(data);
+    this.socket.emit("skip", { gameId: this.gameId }, (data: { status: string, message: string }) => {
+      if (data.status !== 'success')
+        this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
   pause() {
-    this.socket.emit("pause", { gameId: this.gameId }, (data: { status: string }) => {
-      console.log(data);
+    this.socket.emit("pause", { gameId: this.gameId }, (data: { status: string, message: string }) => {
+      if (data.status !== 'success')
+        this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
@@ -290,7 +279,7 @@ export class SocketService {
   }
 
   join(gameId: string, type: 'player' | 'showman') {
-    this.socket.emit("join-game", { gameId, name: localStorage.getItem('name'), type }, (data: { showman: Showman, status: string, maxPlayers: number, gameState: string, gameId: string, packInfo: string, players: Player[], themes: Theme[], roundName: string, chooser: string, questions: Question[], typeRound: 'final' | 'default', pause: boolean }) => {
+    this.socket.emit("join-game", { gameId, name: localStorage.getItem('name'), type }, (data: { showman: Showman, status: string, maxPlayers: number, gameState: string, gameId: string, packInfo: string, players: Player[], themes: Theme[], roundName: string, chooser: string, questions: Question[], typeRound: 'final' | 'default', pause: boolean, message: string }) => {
       if (data.status === 'success') {
         this.playersSubject.next(data.players);
         this.showmanSubject.next(data.showman);
@@ -302,20 +291,17 @@ export class SocketService {
         this.typeRoundSubject.next(data.typeRound);
         this.gameStateSubject.next(data.gameState);
         this.pauseSubject.next(data.pause);
-        this.role = this.socket.ioSocket.id === data.showman.id ? 'showman' : 'player';
+        this.role = type;
         this.gameId = data.gameId;
         this.packInfo = data.packInfo;
-        if (this.router.url !== '/game')
-          this.router.navigate(['/game']);
+        this.router.navigate(['/game']);
       }
-      else {
-        console.log(data);
-      }
+      else this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 
   create(name: string, maxPlayers: number) {
-    this.socket.emit("create-game", { name, maxPlayers, showmanName: localStorage.getItem('name') }, (data: { showman: Showman, status: string, maxPlayers: number, gameState: string, gameId: string, packInfo: string }) => {
+    this.socket.emit("create-game", { name, maxPlayers, showmanName: localStorage.getItem('name') }, (data: { showman: Showman, status: string, maxPlayers: number, gameState: string, gameId: string, packInfo: string, message: string }) => {
       if (data.status === 'success') {
         this.playersSubject.next([]);
         this.showmanSubject.next(data.showman);
@@ -326,9 +312,7 @@ export class SocketService {
         this.packInfo = data.packInfo;
         this.router.navigate(['/game']);
       }
-      else {
-        console.log(data);
-      }
+      else this.snackBar.open(data.message, 'Close', { duration: 3000 });
     });
   }
 }
