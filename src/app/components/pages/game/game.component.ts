@@ -37,6 +37,7 @@ export class GameComponent implements OnDestroy {
   roundNameSub?: Subscription;
   secondsMax = 30;
   seconds = 0;
+  volume = parseFloat(localStorage.getItem('volume') || '0.3');
   interval = interval(1000);
   intervalSub?: Subscription;
   chooser?: string;

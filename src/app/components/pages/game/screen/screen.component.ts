@@ -72,7 +72,9 @@ export class ScreenComponent implements OnChanges {
   @Input() atom?: Atom;
   @Input() gameId?: string;
   @Input() pause?: boolean;
+  @Input() volume!: number;
   @ViewChild('loading') loading?: ElementRef;
+  @ViewChild('volume') volumePlayer?: ElementRef;
   apiUrl = environment.apiUrl;
   playerLoading?: AnimationPlayer;
   loadingAnimation = this._builder.build([
@@ -138,6 +140,10 @@ export class ScreenComponent implements OnChanges {
     return this.socketService.timing;
   }
 
+  setVolume(video: HTMLVideoElement | HTMLAudioElement) {
+    video.volume = this.volume;
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['gameState'] && changes['gameState'].currentValue === 'show-round-themes') {
       let i = 0;
@@ -165,6 +171,11 @@ export class ScreenComponent implements OnChanges {
     }
     if (changes['pause']) {
       changes['pause'].currentValue ? this.playerLoading?.pause() : this.playerLoading?.play();
+    }
+    if (changes['volume']) {
+      localStorage.setItem('volume', changes['volume'].currentValue);
+      if (this.volumePlayer)
+        this.volumePlayer.nativeElement.volume = changes['volume'].currentValue;
     }
   }
 }
