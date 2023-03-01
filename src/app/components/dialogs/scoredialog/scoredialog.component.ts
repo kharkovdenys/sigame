@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-score',
-  templateUrl: './dialog.component.html'
+  templateUrl: './scoredialog.component.html'
 })
 export class DialogScoreComponent {
   constructor(

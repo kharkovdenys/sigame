@@ -11,10 +11,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
-import { DialogAnswerComponent } from './answerdialog/answerdialog.component';
-import { DialogAnsweringComponent } from './answeringdialog/answeringdialog.component';
-import { DialogRatesComponent } from './ratesdialog/ratesdialog.component';
-import { DialogFinalAnswerComponent } from './finalanswerdialog/finalanswerdialog.component';
+import { DialogAnswerComponent } from '../../dialogs/answerdialog/answerdialog.component';
+import { DialogAnsweringComponent } from '../../dialogs/answeringdialog/answeringdialog.component';
+import { DialogRatesComponent } from '../../dialogs/ratesdialog/ratesdialog.component';
+import { DialogFinalAnswerComponent } from '../../dialogs/finalanswerdialog/finalanswerdialog.component';
 
 @Component({
   selector: 'app-game',

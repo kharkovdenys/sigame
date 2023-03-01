@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-join',
-  templateUrl: './dialog.component.html'
+  templateUrl: './joindialog.component.html'
 })
 export class DialogJoinComponent {
   constructor(

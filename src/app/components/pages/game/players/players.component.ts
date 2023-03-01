@@ -4,7 +4,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { DialogScoreComponent } from './dialog/dialog.component';
+import { DialogScoreComponent } from '../../../dialogs/scoredialog/scoredialog.component';
 
 @Component({
   selector: 'app-players',

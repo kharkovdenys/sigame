@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-dialog-name',
-    templateUrl: 'dialog-name.component.html',
+    templateUrl: 'namedialog.component.html',
 })
 export class DialogNameComponent {
     constructor(

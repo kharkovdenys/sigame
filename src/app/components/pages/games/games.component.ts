@@ -5,7 +5,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { DialogJoinComponent } from './dialog/dialog.component';
+import { DialogJoinComponent } from '../../dialogs/joindialog/joindialog.component';
 
 @Component({
   selector: 'app-games',
