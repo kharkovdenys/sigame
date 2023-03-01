@@ -1,7 +1,8 @@
 <div id="screen" [ngSwitch]="gameState">
     <div #loading style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;">
     </div>
-    <img *ngSwitchCase="'without-finale'" class="center" id="wreath" src="/assets/laurel-wreath.svg">
+    <img *ngSwitchCase="gameState==='without-finale'||gameState==='final'?gameState:''" class="center" id="wreath"
+        src="/assets/laurel-wreath.svg">
     <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
     <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
         {{getThemes()}}
@@ -9,7 +10,7 @@
     <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
         <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
     </div>
-    <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering'||gameState==='answering-final'?gameState:''"
+    <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering'||gameState==='answering-final'||gameState === 'final-answer'?gameState:''"
         id="show-question" class="center" [ngSwitch]="atom?.type">
         <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''">
             <div *ngFor="let text of [atom?.text]" [@read]="text">

@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogAnswerComponent } from './components/pages/game/answerdialog/answerdialog.component';
 import { DialogAnsweringComponent } from './components/pages/game/answeringdialog/answeringdialog.component';
+import { DialogFinalAnswerComponent } from './components/pages/game/finalanswerdialog/finalanswerdialog.component';
 import { GameComponent } from './components/pages/game/game.component';
 import { DialogScoreComponent } from './components/pages/game/players/dialog/dialog.component';
 import { PlayersComponent } from './components/pages/game/players/players.component';
@@ -47,6 +48,7 @@ import config from './services/socket.config';
     DialogScoreComponent,
     DialogRatesComponent,
     DialogAnswerComponent,
+    DialogFinalAnswerComponent,
     DialogAnsweringComponent
   ],
   imports: [

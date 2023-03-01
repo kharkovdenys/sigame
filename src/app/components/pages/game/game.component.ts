@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { DialogAnswerComponent } from './answerdialog/answerdialog.component';
 import { DialogAnsweringComponent } from './answeringdialog/answeringdialog.component';
 import { DialogRatesComponent } from './ratesdialog/ratesdialog.component';
+import { DialogFinalAnswerComponent } from './finalanswerdialog/finalanswerdialog.component';
 
 @Component({
   selector: 'app-game',
@@ -72,7 +73,7 @@ export class GameComponent implements OnDestroy {
       if (pause) {
         this.intervalSub?.unsubscribe();
       } else {
-        if (this.gameState === 'choose-player-start' || this.gameState === 'choose-questions' || this.gameState === 'choose-theme' || this.gameState === 'rates' || this.gameState === 'answering') {
+        if (this.gameState === 'choose-player-start' || this.gameState === 'choose-questions' || this.gameState === 'choose-theme' || this.gameState === 'rates' || this.gameState === 'answering' || this.gameState === 'answering-final' || this.gameState === 'final-answer') {
           this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
         }
       }
@@ -95,9 +96,15 @@ export class GameComponent implements OnDestroy {
         case 'rates': { this.comment = 'Players who made it to the finals place bets'; break; }
         case 'without-finale': { this.comment = 'No one made it to the finals'; break; }
         case 'answering-final': { this.comment = 'Here is the final question'; this.secondsMax = 60; break; }
+        case 'final-answer': { this.comment = this.chooser + ` replied "${this.socketService.playerAnswer}"`; this.secondsMax = 30; break; }
+        case 'final': {
+          const result: Player[] = this.players.filter(p => p.state !== 'Not a finalist').sort((a, b) => b.score - a.score);
+          const winnerName = result.filter(r => r.score === result[0].score).map(w => w.name);
+          this.comment = 'Winner: ' + winnerName.join(' '); break;
+        }
       }
       this.intervalSub?.unsubscribe();
-      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering' || gameState === 'answering-final') {
+      if (gameState === 'choose-player-start' || gameState === 'choose-questions' || gameState === 'choose-theme' || gameState === 'rates' || gameState === 'answering' || gameState === 'answering-final' || gameState === 'final-answer') {
         this.seconds = this.secondsMax;
         this.intervalSub = this.interval.subscribe(() => this.seconds > 0 ? this.seconds -= 1 : this.intervalSub?.unsubscribe());
       }
@@ -113,6 +120,10 @@ export class GameComponent implements OnDestroy {
         this.dialog.closeAll();
         this.openAnswerDialog();
       }
+      if (gameState === 'final-answer' && this.role === 'showman') {
+        this.dialog.closeAll();
+        this.openFinalAnswerDialog();
+      }
     });
     this.positionSub = this.socketService.position.subscribe(position => this.position = position);
     this.themesSub = this.socketService.themes.subscribe(themes => this.themes = themes);
@@ -121,9 +132,8 @@ export class GameComponent implements OnDestroy {
     this.gameId = this.socketService.gameId;
     const id = this.socketService.getId();
     this.role = id === this.showman?.id ? 'showman' : 'player';
-    const player = this.players.filter(p => p.id === id);
-    if (player.length)
-      this.playerName = player[0].name;
+    const player = this.players.find(p => p.id === id);
+    if (player) this.playerName = player.name;
   }
 
   openRatesDialog(): void {
@@ -162,6 +172,17 @@ export class GameComponent implements OnDestroy {
     });
   }
 
+  openFinalAnswerDialog(): void {
+    this.dialogRefAnswer = this.dialog.open(DialogFinalAnswerComponent, {
+      disableClose: true,
+      data: { answer: this.socketService.answer, playerAnswer: this.socketService.playerAnswer, playerName: this.chooser }, position: { bottom: "10%" }
+    });
+
+    this.dialogRefAnswer.afterClosed().subscribe(result => {
+      this.socketService.sendFinalAnswerResult(result ?? false);
+    });
+  }
+
   start() {
     this.socketService.start();
   }
@@ -184,8 +205,7 @@ export class GameComponent implements OnDestroy {
   }
 
   clickForAnswer() {
-    if (this.gameState !== 'answer')
-      this.socketService.clickForAnswer();
+    if (this.gameState !== 'answer') this.socketService.clickForAnswer();
   }
 
   ngOnDestroy(): void {

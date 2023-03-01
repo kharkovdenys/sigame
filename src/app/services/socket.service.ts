@@ -47,6 +47,7 @@ export class SocketService {
   public comment = '';
   public timing = 15;
   public answer = '';
+  public playerAnswer = '';
 
   constructor(private socket: Socket, private router: Router, private snackBar: MatSnackBar) {
 
@@ -175,6 +176,16 @@ export class SocketService {
       this.gameStateSubject.next('without-finale');
     });
 
+    this.socket.on("final", () => {
+      this.gameStateSubject.next('final');
+    });
+
+    this.socket.on("final-answer", (data: { answer: string, chooser: string, gameState: string }) => {
+      this.playerAnswer = data.answer;
+      this.chooserSubject.next(data.chooser);
+      this.gameStateSubject.next(data.gameState);
+    });
+
     this.socket.on("answering-final", () => {
       this.gameStateSubject.next('answering-final');
     });
@@ -244,6 +255,10 @@ export class SocketService {
 
   sendAnswerResult(result: boolean) {
     this.socket.emit("send-answer-result", { gameId: this.gameId, result, chooser: this.chooserSubject.getValue() });
+  }
+
+  sendFinalAnswerResult(result: boolean) {
+    this.socket.emit("send-final-answer-result", { gameId: this.gameId, result, chooser: this.chooserSubject.getValue() });
   }
 
   getId(): string {
