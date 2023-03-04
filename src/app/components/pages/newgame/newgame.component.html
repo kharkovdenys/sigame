@@ -1,12 +1,11 @@
-<div class="center" style="margin-top: 15px;">
-    <div style="display: grid;margin-bottom: 12px;">
+<div class="center" id="newgame">
+    <div id="inputs">
         <mat-form-field>
             <mat-label>Game name: </mat-label>
             <input matInput [(ngModel)]="name" required />
         </mat-form-field>
-        <mat-form-field>
-            <ngx-mat-file-input [formControl]="fileControl" placeholder="Question pack" accept=".siq" />
-        </mat-form-field>
+        <button type="button" mat-raised-button (click)="fileInput.click()">{{file?file.name:'Choose File'}}</button>
+        <input hidden #fileInput type="file" accept=".siq">
         <mat-progress-bar mode="determinate" value="{{percentCompleted}}"></mat-progress-bar>
     </div>
     <mat-label>Max player: </mat-label>

@@ -1,9 +1,8 @@
 import { SocketIoModule } from 'ngx-socket-io';
 
-import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { CdkTableModule } from '@angular/cdk/table';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -56,7 +55,6 @@ import config from './services/socket.config';
     AppRoutingModule,
     FormsModule,
     CdkTableModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatSliderModule,
     MatInputModule,
@@ -67,7 +65,6 @@ import config from './services/socket.config';
     MatFormFieldModule,
     MatDialogModule,
     MatProgressBarModule,
-    NgxMatFileInputModule,
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule
   ],

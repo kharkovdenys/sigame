@@ -1,0 +1,8 @@
+#newgame {
+    margin-top: 15px;
+}
+
+#inputs {
+    display: grid;
+    margin-bottom: 12px;
+}

@@ -1,5 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
-
 html,
 body {
     height: 100%;
@@ -27,38 +25,6 @@ img {
     align-items: center;
 }
 
-[id^=ngx-mat-fileinput] {
-    font: inherit;
-    background: transparent;
-    color: currentColor;
-    border: none;
-    outline: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    max-width: 100%;
-    vertical-align: bottom;
-    text-align: inherit;
-    box-sizing: content-box;
-}
-
-mat-icon.mat-icon.notranslate.ngx-mat-file-input--default-icon.material-icons.mat-icon-no-color.ng-star-inserted {
-    font-size: inherit;
-    color: #3f51b5;
-    text-align: center;
-    height: 1.125em;
-    line-height: 1.125;
-    width: 1em;
-}
-
-button.mat-focus-indicator.button-browse.mat-icon-button.mat-button-base.mat-primary {
-    height: 1.5em;
-    width: 1.5em;
-    font: inherit;
-    vertical-align: baseline;
-    background: rgba(0, 0, 0, 0);
-}
-
-.mat-mdc-dialog-actions{
+.mat-mdc-dialog-actions {
     justify-content: end !important;
 }
