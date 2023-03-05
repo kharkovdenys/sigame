@@ -6,9 +6,9 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="{name: data.name,type:'player'}" [disabled]="data.name!==''?false:true">Join
+    <button mat-button [mat-dialog-close]="{name: data.name,type:'player'}" [disabled]="!data.name">Join
         as a player</button>
-    <button mat-button [mat-dialog-close]="{name: data.name,type:'showman'}" [disabled]="data.name!==''?false:true">Join
+    <button mat-button [mat-dialog-close]="{name: data.name,type:'showman'}" [disabled]="!data.name">Join
         as a showman</button>
     <button mat-button (click)="onCancelClick()">Cancel</button>
 </div>

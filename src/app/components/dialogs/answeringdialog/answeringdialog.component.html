@@ -6,5 +6,5 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="data.answer" [disabled]="data.answer!==''?false:true">Send</button>
+    <button mat-button [mat-dialog-close]="data.answer" [disabled]="!data.answer">Send</button>
 </div>
