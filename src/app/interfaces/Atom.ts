@@ -1,4 +1,4 @@
 export default interface Atom {
-    text?: string;
+    text: string;
     type: string;
 }

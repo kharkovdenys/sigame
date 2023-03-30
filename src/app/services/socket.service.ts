@@ -27,7 +27,7 @@ export class SocketService {
   private questionsSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
   private positionSubject: BehaviorSubject<Position> = new BehaviorSubject<Position>({ i: -1, j: -1 });
   private typeRoundSubject: BehaviorSubject<'final' | 'default'> = new BehaviorSubject<'final' | 'default'>('default');
-  private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ type: 'default' });
+  private atomSubject: BehaviorSubject<Atom> = new BehaviorSubject<Atom>({ text: '', type: 'default' });
   private pauseSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private role: 'showman' | 'player' = 'showman';
   public players = this.playersSubject.asObservable();

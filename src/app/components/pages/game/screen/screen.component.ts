@@ -60,7 +60,6 @@ export class ScreenComponent implements OnChanges {
     private _builder: AnimationBuilder
   ) { }
   @Input() gameState!: string;
-  expectation = 'Waiting for the start';
   @Input() themes!: Theme[];
   @Input() roundName?: string;
   @Input() chooser?: string;

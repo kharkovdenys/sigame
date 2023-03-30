@@ -1,20 +1,19 @@
 <div id="screen" [ngSwitch]="gameState">
-    <div #loading style="width: calc(100% - 8px);height: calc(100% - 8px);position: absolute;pointer-events: none;">
-    </div>
-    <img *ngSwitchCase="gameState==='without-finale'||gameState==='final'?gameState:''" class="center" id="wreath"
-        src="/assets/laurel-wreath.svg">
-    <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">{{expectation}}</div>
-    <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{value:0,params:{time:themes.length}}">
+    <div #loading id="loading"></div>
+    <img *ngSwitchCase="gameState === 'without-finale' || gameState === 'final' ? gameState : ''" class="center"
+        id="wreath" src="/assets/laurel-wreath.svg">
+    <div *ngSwitchCase="'waiting-ready'" id="main-text" class="center">Waiting for the start</div>
+    <div *ngSwitchCase="'show-themes'" id="show-themes" [@themes]="{ value: 0, params: { time: themes.length } }">
         {{getThemes()}}
     </div>
     <div id="show-round-themes" class="center" *ngSwitchCase="'show-round-themes'">
         <div *ngFor="let roundThemesText of [roundThemesText]" [@round-themes]>{{roundThemesText}}</div>
     </div>
-    <div *ngSwitchCase="gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering'||gameState==='answering-final'||gameState === 'final-answer'?gameState:''"
+    <div *ngSwitchCase="gameState === 'show-question' || gameState === 'can-answer' || gameState === 'answer' || gameState === 'answering' || gameState === 'answering-final' || gameState === 'final-answer' ? gameState : ''"
         id="show-question" class="center" [ngSwitch]="atom?.type">
-        <div *ngSwitchCase="atom?.type==='default'||atom?.type==='say'?atom?.type:''">
+        <div *ngSwitchCase="'text'">
             <div *ngFor="let text of [atom?.text]" [@read]="text">
-                <p class="line" *ngFor="let line of (text??'').split('\n')">
+                <p class="line" *ngFor="let line of (text ?? '').split('\n')">
                     <span class="word" *ngFor="let word of line.split(' ')">
                         <span class="letter" *ngFor="let letter of split(word)">
                             {{letter}}
@@ -25,17 +24,17 @@
         </div>
         <img *ngSwitchCase="'image'" src="{{apiUrl}}/image/{{gameId}}?{{atom?.text}}"
             style="max-width: 100%;max-height: 100%;display: block;">
-        <audio #volume *ngSwitchCase="'voice'" (loadedmetadata)="setVolume(volume)" autoplay>
+        <audio #volume *ngSwitchCase="'audio'" (loadedmetadata)="setVolume(volume)" autoplay>
             <source src="{{apiUrl}}/audio/{{gameId}}?{{atom?.text}}" type="audio/mpeg">
         </audio>
-        <img *ngSwitchCase="'voice'" src="/assets/musical-notes.svg"
+        <img *ngSwitchCase="'audio'" src="/assets/musical-notes.svg"
             style="max-width: 60%;max-height: 100%;display: block;" id="notes">
         <video #volume *ngSwitchCase="'video'" (loadedmetadata)="setVolume(volume)" autoplay
             style="max-width: 100%;max-height: 100%;display: block;">
             <source src="{{apiUrl}}/video/{{gameId}}?{{atom?.text}}" type="video/mp4">
         </video>
     </div>
-    <div *ngIf="typeRound==='default'" class="table">
+    <div *ngIf="typeRound === 'default'" class="table">
         <div class="table"
             *ngSwitchCase="gameState === 'choose-questions' || gameState === 'choose-player-start' || gameState ==='question-i-j'? gameState : ''">
             <table mat-table [dataSource]="questions">
@@ -53,7 +52,7 @@
             </table>
         </div>
     </div>
-    <div *ngIf="typeRound==='final'" class="table">
+    <div *ngIf="typeRound === 'final'" class="table">
         <div class="table"
             *ngSwitchCase="gameState === 'theme-i' || gameState === 'choose-player-start' || gameState ==='choose-theme'? gameState : ''">
             <table mat-table [dataSource]="questions">
