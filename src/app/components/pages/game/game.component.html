@@ -32,7 +32,7 @@
     <div id="bottom-part">
         <div id="actions" class="center">
             <button mat-button (click)="clickForAnswer()"
-                *ngIf="role==='player'&&(gameState==='show-question'||gameState==='can-answer'||gameState==='answer')">Answer
+                *ngIf="role==='player'&&(gameState==='show-question'||gameState==='can-answer'||gameState==='answer'||gameState==='answering')">Answer
                 the question</button>
             <button mat-button (click)="pause()" *ngIf="role==='showman'&&gameState!=='waiting-ready'">Pause</button>
             <button mat-button (click)="skip()" *ngIf="role==='showman'&&gameState!=='waiting-ready'">Skip</button>
